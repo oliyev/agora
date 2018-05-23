@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
-import './style/main.css';
 import './style/App.css';
+import './style/main.css';
 
 class App extends Component {
   render() {
@@ -15,7 +15,7 @@ class App extends Component {
           To get started, dsafedit <code>src/App.js</code> and save to reload.
         </p>
         <div className="homepage">
-          <span>hello</span>
+          <span>asdfashello</span>
         </div>
       </div>
     );
