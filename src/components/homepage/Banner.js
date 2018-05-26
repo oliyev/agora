@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import '../../style/main.css';
+import '../../css/main.css';
 
 const banner = (props) => {
   return (

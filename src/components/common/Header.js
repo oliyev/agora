@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import '../../style/App.css';
-import '../../style/main.css';
+import '../../css/App.css';
+import '../../css/main.css';
 
 export default (props) => {
   return (

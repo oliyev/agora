@@ -6,7 +6,8 @@ const bodyParser = require('body-parser');
 const amqplib = require('amqplib').connect(url);
 const io = require('socket.io')(server);
 
-let q = 'tasks';
+let q = 'task';
+console.log(url);
 
 
 app.use(bodyParser.json()); // for parsing application/json
@@ -18,11 +19,11 @@ app.use(function(req, res, next) {
 });
 
 app.post('/msg', function (req, res, next) {
-  console.log(req.body);
   msg = req.body.msg
 
   // Publisher
   amqplib.then(function(conn) {
+    console.log(conn);
     var ok = conn.createChannel();
     ok = ok.then(function(ch) {
       ch.assertQueue(q);
@@ -40,6 +41,7 @@ amqplib.then(function(conn) {
   ok = ok.then(function(ch) {
     ch.assertQueue(q);
     ch.consume(q, function(msg) {
+      console.log('in consume');
       if (msg !== null) {
         console.log(msg.content.toString());
         io.emit('message', msg.content.toString());

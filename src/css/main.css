@@ -9,6 +9,15 @@ body{
   margin: 0;
 }
 
+.chat-height {
+	height: 450px;
+}
+
+.msg-cont {
+	height: 70px;
+}
+
+
 .homepagebg {
   background-image: url("../images/socrates.png");
 	opacity: 0.95;

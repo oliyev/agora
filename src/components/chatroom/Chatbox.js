@@ -1,10 +1,7 @@
 //text area + send button
 import React, { Component } from 'react';
 import api from '../../api';
-import io from 'socket.io-client';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
-let ws = io.connect('http://127.0.0.1:4000/');
 
 class Chatbox extends Component {
   state = {
@@ -14,10 +11,10 @@ class Chatbox extends Component {
 
   render() {
     return (
-      <div className="input-group mb-3">
-        <input type="text" className="form-control" placeholder="Enter your argument" aria-label="Recipient's username" aria-describedby="basic-addon2" disabled={this.state.isDisabled}/>
+      <div className="input-group mb-1">
+        <input id="msg2send" type="text" className="form-control shadow-sm" placeholder="Enter your argument" aria-label="Recipient's username" aria-describedby="basic-addon2" disabled={this.state.isDisabled}/>
         <div className="input-group-append">
-          <button className="btn btn-outline-secondary" type="button">Send</button>
+          <button onClick={this.send} className="btn btn-outline-secondary border shadow-sm" type="button">Send</button>
         </div>
       </div>
     );
@@ -32,9 +29,5 @@ class Chatbox extends Component {
     .catch((err) => console.log(err))
   }
 }
-
-
-ws.on('connect', (data) => console.log('ws connected'));
-ws.on('message', (data) => console.log(data));
 
 export default Chatbox;
