@@ -9,6 +9,7 @@ import '../css/main.css';
 
 class Chatroom extends Component {
   state = {
+    messages: []
   }
 
   render() {
@@ -25,8 +26,9 @@ class Chatroom extends Component {
   }
 
   // methods
-  addMessage = (data) => {
-    document.querySelector('#chatoutput').appendChild(<Message msg={data.msg}/>);
+  static addMessage (data) {
+    console.log(data);
+    console.log(document.querySelector('#chatoutput'));
   }
 }
 
