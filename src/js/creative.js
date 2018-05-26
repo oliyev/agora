@@ -1,6 +1,7 @@
 import ScrollReveal from 'scrollreveal';
 import sr from 'scrollreveal';
 import jQuery from 'jquery';
+import scrollspy from 'scrollreveal';
 
 (function($) {
   "use strict"; // Start of use strict
