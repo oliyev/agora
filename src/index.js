@@ -4,13 +4,15 @@ import Homepage from './views/Homepage';
 import Chatroom from './views/Chatroom';
 import registerServiceWorker from './registerServiceWorker';
 import 'bootstrap/dist/css/bootstrap.min.css';
-<<<<<<< HEAD
-
 import './css/creative.min.css';
 
-=======
-import './css/creative.min.css';
->>>>>>> bf5cdc73c847039aef7142e2f675c999c3e8a458
+import Bootstrap from 'bootstrap';
+import jQuery from 'jquery';
+import jQueryEasing from 'jquery.easing';
+import ScrollReveal from 'scrollreveal';
+import MaginificPopup from 'magnific-popup';
+
+import './js/creative.js'
 
 ReactDOM.render(<Chatroom />, document.getElementById('root'));
 registerServiceWorker();

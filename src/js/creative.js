@@ -1,9 +1,13 @@
+import ScrollReveal from 'scrollreveal';
+import sr from 'scrollreveal';
+import jQuery from 'jquery';
+
 (function($) {
   "use strict"; // Start of use strict
 
   // Smooth scrolling using jQuery easing
   $('a.js-scroll-trigger[href*="#"]:not([href="#"])').click(function() {
-    if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+    if (window.location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && window.location.hostname == this.hostname) {
       var target = $(this.hash);
       target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
       if (target.length) {
@@ -40,7 +44,7 @@
   $(window).scroll(navbarCollapse);
 
   // Scroll reveal calls
-  window.sr = ScrollReveal();
+  let sr = ScrollReveal();
   sr.reveal('.sr-icons', {
     duration: 600,
     scale: 0.3,
