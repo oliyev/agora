@@ -2,11 +2,7 @@ import React, {Component} from 'react';
 
 import Banner from '../components/homepage/Banner';
 import Nav from '../components/homepage/Nav'
-import Header from '../components/homepage/Header'
-import About from '../components/homepage/About-Section'
-import Features from '../components/homepage/Features'
-import Categories from '../components/homepage/Categories'
-import Contact from '../components/homepage/Contact'
+import Homepage from './Homepage'
 import Chatroom from './Chatroom'
 
 import '../css/App.css';
@@ -24,9 +20,11 @@ import '../../node_modules/jquery/dist/jquery.js';
 import '../../node_modules/jquery.easing/jquery.easing.js'
 //import '../js/creative.js'
 
-class Homepage extends Component {
+import { Route } from 'react-router-dom'
 
-/*  componentDidMount() {
+class Main extends Component {
+
+  componentDidMount() {
 
     (function($) {
       "use strict"; // Start of use strict
@@ -85,36 +83,23 @@ class Homepage extends Component {
         distance: '0px'
       }, 300);
 
-      // Magnific popup calls
-      $('.popup-gallery').magnificPopup({
-        delegate: 'a',
-        type: 'image',
-        tLoading: 'Loading image #%curr%...',
-        mainClass: 'mfp-img-mobile',
-        gallery: {
-          enabled: true,
-          navigateByImgClick: true,
-          preload: [0, 1]
-        },
-        image: {
-          tError: '<a href="%url%">The image #%curr%</a> could not be loaded.'
-        }
-      });
-
     })(jQuery); // End of use strict
 
-  }*/
+  }
 
   render() {
-    return (<div className="App">
-      <Nav/>
-      <Header/>
-      <About/>
-      <Features/>
-      <Categories/>
-      <Contact/>
-    </div>);
-  }
+    return (
+      <div className="App">
+        <Nav/>
+
+        <Route exact path="/" render={() =>
+          <div>
+            <Homepage />
+          </div> }/>
+
+        <Route path="/debate" render={() => <Chatroom /> }/>
+      </div>
+  );}
 }
 
-export default Homepage;
+export default Main;
