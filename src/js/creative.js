@@ -26,10 +26,10 @@ import scrollspy from 'scrollreveal';
   });
 
   // Activate scrollspy to add active class to navbar items on scroll
-  $('body').scrollspy({
+/*$('body').scrollspy({
     target: '#mainNav',
     offset: 57
-  });
+  });*/
 
   // Collapse Navbar
   var navbarCollapse = function() {

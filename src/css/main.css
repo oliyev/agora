@@ -16,8 +16,20 @@ body{
 	--msgimg-wh: calc(var(--msgcont-height) - .50rem);
 }
 
+.logo{
+	width:50px;
+}
+
+.headerStyle{
+	margin-top:150px;
+}
+
 .chat-height {
 	height: 450px;
+}
+
+.position{
+	color:rgb(61, 62, 68);
 }
 
 .msg-cont {
