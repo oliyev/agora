@@ -112,7 +112,7 @@ class Homepage extends Component {
       <div className="App">
         <Nav/>
 
-        <Route path="/" render={() =>
+        <Route exact path="/" render={() =>
           <div>
             <Header />
             <About />

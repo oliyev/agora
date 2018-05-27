@@ -24,12 +24,14 @@ body{
 	margin-top:150px;
 }
 
-.chat-height {
-	height: 450px;
-}
-
 .position{
 	color:rgb(61, 62, 68);
+}
+
+/* chat style */
+.chat-height {
+	height: 450px;
+	overflow: auto;
 }
 
 .msg-cont {
@@ -42,6 +44,29 @@ body{
 .msgimg {
 	height: var(--msgimg-wh);
 	width: var(--msgimg-wh);
+}
+
+.argFor {
+	color: #fff;
+	background-color: #4ecdc4;
+}
+
+.argAgainst {
+	color: #fff;
+	background-color: #f5a46c;
+}
+
+.neut-state {
+		color: #fff;
+		background-color: #737495;
+		width: 100% !important;
+		border-radius: 15px;
+}
+
+.word-emphasis {
+	font-weight: bold;
+	font-size: 1.15rem;
+	color: #f5a46c;
 }
 
 .homepagebg {
