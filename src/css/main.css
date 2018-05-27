@@ -20,6 +20,10 @@ body{
 	width:50px;
 }
 
+.nav-link{
+	cursor:pointer;
+}
+
 .headerStyle{
 	margin-top:150px;
 }

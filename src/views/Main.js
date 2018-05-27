@@ -24,6 +24,8 @@ import '../../node_modules/jquery.easing/jquery.easing.js'
 import { Route } from 'react-router-dom'
 import isNil from 'lodash/fp/isNil';
 
+import axios from 'axios';
+
 class Main extends Component {
 
   componentDidMount() {
@@ -89,8 +91,10 @@ class Main extends Component {
 
   }
 
+
   state = {
-    displayLogin:false
+    displayLogin:false,
+    user:null
   }
 
   loginClickHandler = () => {
@@ -111,13 +115,26 @@ class Main extends Component {
     }
   }
 
+  loginHandler = () => {
+    axios.get('https://agora-spring.herokuapp.com/getUsers')
+      .then(response => {
+        console.log(response);
+        this.setState({user : response.data})
+      })
+
+    console.log(this.state.user)
+  }
+
   render() {
 
     let login = null;
     console.log("TESTESTSE")
     if (this.state.displayLogin){
       console.log("SHOULD DISPAY LOGIN")
-      login = <Login outside={this.outsideClickHandler} />
+      login = <Login
+        outside={this.outsideClickHandler}
+        login={this.loginHandler}
+        />
     }
 
     return (
