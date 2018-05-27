@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Homepage from './views/Homepage';
-import Chatroom from './views/Chatroom';
+import Main from './views/Main';
 import registerServiceWorker from './registerServiceWorker';
 
 //For SPA routing capabilities -- to install -> npm install --save react-router react-router-dom
@@ -13,7 +12,7 @@ import './css/creative.css';
 
 ReactDOM.render((
   <BrowserRouter>
-    <Homepage />
+    <Main />
   </BrowserRouter>
 ), document.getElementById('root'));
 registerServiceWorker();

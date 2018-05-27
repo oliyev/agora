@@ -1,12 +1,10 @@
 import React, {Component} from 'react';
 
 import Banner from '../components/homepage/Banner';
-import Header from '../components/homepage/Header'
-import About from '../components/homepage/About-Section'
-import Features from '../components/homepage/Features'
-import Categories from '../components/homepage/Categories'
-import Contact from '../components/homepage/Contact'
+import Nav from '../components/common/Nav'
+import Homepage from './Homepage'
 import Chatroom from './Chatroom'
+import Login from '../components/login/Login'
 
 import '../css/App.css';
 
@@ -15,10 +13,22 @@ import sr from 'scrollreveal';
 import jQuery from 'jquery';
 import scrollspy from 'scrollreveal';
 
+import '../../node_modules/font-awesome/css/font-awesome.min.css';
 
-class Homepage extends Component {
+import '../../node_modules/bootstrap/dist/js/bootstrap.bundle.js'
+import '../../node_modules/magnific-popup/dist/jquery.magnific-popup.js'
+import '../../node_modules/jquery/dist/jquery.js';
+import '../../node_modules/jquery.easing/jquery.easing.js'
+//import '../js/creative.js'
 
-/*  componentDidMount() {
+import { Route } from 'react-router-dom'
+import isNil from 'lodash/fp/isNil';
+
+import axios from 'axios';
+
+class Main extends Component {
+
+  componentDidMount() {
 
     (function($) {
       "use strict"; // Start of use strict
@@ -77,35 +87,70 @@ class Homepage extends Component {
         distance: '0px'
       }, 300);
 
-      // Magnific popup calls
-      $('.popup-gallery').magnificPopup({
-        delegate: 'a',
-        type: 'image',
-        tLoading: 'Loading image #%curr%...',
-        mainClass: 'mfp-img-mobile',
-        gallery: {
-          enabled: true,
-          navigateByImgClick: true,
-          preload: [0, 1]
-        },
-        image: {
-          tError: '<a href="%url%">The image #%curr%</a> could not be loaded.'
-        }
-      });
-
     })(jQuery); // End of use strict
 
-  }*/
+  }
+
+
+  state = {
+    displayLogin:false,
+    user:null
+  }
+
+  loginClickHandler = () => {
+    const doesShow = this.state.displayLogin;
+    this.setState({displayLogin : !doesShow})
+    console.log("Show: " + doesShow)
+  }
+
+  outsideClickHandler = (e) => {
+
+    if(e.target == document.getElementsByClassName('greyback')[0]){
+      console.log("TRUE");
+      const doesShow = this.state.displayLogin;
+      this.setState({displayLogin : !doesShow})
+    }
+    else{
+      console.log("FALSE")
+    }
+  }
+
+  loginHandler = () => {
+    axios.get('https://agora-spring.herokuapp.com/getUsers')
+      .then(response => {
+        console.log(response);
+        this.setState({user : response.data})
+      })
+
+    console.log(this.state.user)
+  }
 
   render() {
-    return (<div className="App">
-      <Header/>
-      <About/>
-      <Features/>
-      <Categories/>
-      <Contact/>
-    </div>);
-  }
+
+    let login = null;
+    console.log("TESTESTSE")
+    if (this.state.displayLogin){
+      console.log("SHOULD DISPAY LOGIN")
+      login = <Login
+        outside={this.outsideClickHandler}
+        login={this.loginHandler}
+        />
+    }
+
+    return (
+      <div className="App">
+        <Nav loginHandler={this.loginClickHandler}/>
+        {login}
+        <Route exact path="/" render={() =>
+          <div>
+            <Homepage />
+          </div> }/>
+
+        <Route path="/debate" render={() => <Chatroom /> }/>
+
+        <Route path="/login" render={() => <Login /> }/>
+      </div>
+  );}
 }
 
-export default Homepage;
+export default Main;
