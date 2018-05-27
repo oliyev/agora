@@ -7,43 +7,52 @@ import Message from '../components/chatroom/Message';
 import '../css/App.css';
 import '../css/main.css';
 
+let FOR = true;
+let AGAINST = false;
+
 class Chatroom extends Component {
+
   state = {
+    ws: {},
     messages: []
   }
 
+  // lifecycle events
+  componentWillMount () {
+    this.state.ws = io.connect('http://127.0.0.1:4000/');
+    this.state.ws.on('connect', (data) => console.log('ws connected'));
+    this.state.ws.on('message', (data) => { this.addMessage(data); });
+  }
+
   render() {
+    let messages = (
+      <div id="chatoutput" className="shadow-sm p-3 mb-3 bg-white rounded border chat-height">
+        {this.state.messages.map((message, index) => {
+          return <Message key={index} msg={message.msg} stance={message.stance}/>
+        })}
+      </div>
+    )
 
     return (
       <div className="shadow-sm p-3 mb-1 bg-white rounded">
-        <div id="chatoutput" className="shadow-sm p-3 mb-3 bg-white rounded border chat-height">
-          <Message msg="1" isFor={true}/>
-          <Message msg="2"/>
-        </div>
+        {messages}
         <Chatbox />
       </div>
     );
   }
 
   // methods
-  static addMessage (data) {
+  addMessage (data) {
     console.log(data);
-    console.log(document.querySelector('#chatoutput'));
+    console.log(this.state)
+    let messages = [...this.state.messages];
+    let message = {msg:data, stance:FOR}
+    messages.push(message);
+    this.setState({
+      messages:messages
+    })
   }
+
 }
-
-let ws = io.connect('http://127.0.0.1:4000/');
-let chat;
-
-document.addEventListener('DOMContentLoaded', (ev) =>{
-   chat = document.querySelector('#chatoutput');
-   console.log(chat);
-});
-
-ws.on('connect', (data) => console.log('ws connected'));
-ws.on('message', (data) => {
-  Chatroom.addMessage(data);
-});
-
 
 export default Chatroom;

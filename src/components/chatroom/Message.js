@@ -4,11 +4,7 @@ import api from '../../api';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 class Message extends Component {
-  state = {
-    q: 'queue',
-    isDisabled: false,
-    isFor: true
-  }
+  state = {}
 
   // methods
 
@@ -21,9 +17,11 @@ class Message extends Component {
     }
     else {
       return (
-        <div className="input-group mb-1 col-m10 border msg-cont">
-        <img src="" alt="userIcon" />
-        <span>{this.props.msg}</span>
+        <div className="input-group mb-1 col-m10">
+          <img className="m-1 msgimg" src={require("../../img/test-icon.png")} alt="userIcon" />
+          <div className="border msg-cont p-3">
+            <span className="align-middle col-m12 d-block ">{this.props.msg}</span>
+          </div>
         </div>
       )
     }

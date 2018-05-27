@@ -9,14 +9,28 @@ body{
   margin: 0;
 }
 
+:root {
+	--msgcont-height: 60px;
+	--msgcont-width: calc(100% - (var(--msgcont-height) + .50rem));
+	--msgcont-bradius: calc(var(--msgcont-height) / 2);
+	--msgimg-wh: calc(var(--msgcont-height) - .50rem);
+}
+
 .chat-height {
 	height: 450px;
 }
 
 .msg-cont {
-	height: 70px;
+	min-height: var(--msgcont-height);
+	border-radius: var(--msgcont-bradius);
+	width: var(--msgcont-width);
+  word-wrap: break-word;
 }
 
+.msgimg {
+	height: var(--msgimg-wh);
+	width: var(--msgimg-wh);
+}
 
 .homepagebg {
   background-image: url("../img/socrates.png");
@@ -115,7 +129,7 @@ body{
 
 /*we make all elements with a class that contains "col-" to float in order to have those elements aligned side by side*/
 
-[class*="col-"]{
+[class*="col-m-"]{
 	float:left;
 	padding: 0;
 }
