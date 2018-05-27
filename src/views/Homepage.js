@@ -7,6 +7,7 @@ import About from '../components/homepage/About-Section'
 import Features from '../components/homepage/Features'
 import Categories from '../components/homepage/Categories'
 import Contact from '../components/homepage/Contact'
+import Chatroom from './Chatroom'
 
 import '../css/App.css';
 
@@ -23,9 +24,11 @@ import '../../node_modules/jquery/dist/jquery.js';
 import '../../node_modules/jquery.easing/jquery.easing.js'
 //import '../js/creative.js'
 
+import { Route } from 'react-router-dom'
+
 class Homepage extends Component {
 
-  componentDidMount() {
+  /*componentDidMount() {
 
     (function($) {
       "use strict"; // Start of use strict
@@ -34,7 +37,9 @@ class Homepage extends Component {
       $('a.js-scroll-trigger[href*="#"]:not([href="#"])').click(function() {
         if (window.location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && window.location.hostname == this.hostname) {
           var target = $(this.hash);
-          target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+          target = target.length
+            ? target
+            : $('[name=' + this.hash.slice(1) + ']');
           if (target.length) {
             $('html, body').animate({
               scrollTop: (target.offset().top - 57)
@@ -50,10 +55,7 @@ class Homepage extends Component {
       });
 
       // Activate scrollspy to add active class to navbar items on scroll
-    $('body').scrollspy({
-        target: '#mainNav',
-        offset: 57
-      });
+      $('body').scrollspy({target: '#mainNav', offset: 57});
 
       // Collapse Navbar
       var navbarCollapse = function() {
@@ -86,7 +88,7 @@ class Homepage extends Component {
       }, 300);
 
       // Magnific popup calls
-    $('.popup-gallery').magnificPopup({
+      $('.popup-gallery').magnificPopup({
         delegate: 'a',
         type: 'image',
         tLoading: 'Loading image #%curr%...',
@@ -103,18 +105,25 @@ class Homepage extends Component {
 
     })(jQuery); // End of use strict
 
-  }
+  }*/
 
   render() {
-    return (<div className="App">
-      <Nav/>
-      <Header/>
-      <About/>
-      <Features />
-      <Categories />
-      <Contact />
-    </div>);
-  }
+    return (
+      <div className="App">
+        <Nav/>
+
+        <Route path="/" render={() =>
+          <div>
+            <Header />
+            <About />
+            <Features />
+            <Categories />
+            <Contact />
+          </div>}/>
+
+        <Route path="/debate" render={() => <Chatroom />}/>
+      </div>
+  );}
 }
 
 export default Homepage;
