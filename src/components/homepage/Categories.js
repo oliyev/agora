@@ -4,7 +4,7 @@ import '../../css/main.css';
 const categories = (props) => {
   return (
     <div>
-    <section classNameName="p-0" id="Categories">
+    <section className="p-0" id="Categories">
       <div className="container-fluid p-0">
         <div className="row no-gutters popup-gallery">
           <div className="col-lg-4 col-sm-6">

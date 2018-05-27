@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 
 import Banner from '../components/homepage/Banner';
-import Nav from '../components/homepage/Nav'
 import Header from '../components/homepage/Header'
 import About from '../components/homepage/About-Section'
 import Features from '../components/homepage/Features'
@@ -16,13 +15,6 @@ import sr from 'scrollreveal';
 import jQuery from 'jquery';
 import scrollspy from 'scrollreveal';
 
-import '../../node_modules/font-awesome/css/font-awesome.min.css';
-
-import '../../node_modules/bootstrap/dist/js/bootstrap.bundle.js'
-import '../../node_modules/magnific-popup/dist/jquery.magnific-popup.js'
-import '../../node_modules/jquery/dist/jquery.js';
-import '../../node_modules/jquery.easing/jquery.easing.js'
-//import '../js/creative.js'
 
 class Homepage extends Component {
 
@@ -107,7 +99,6 @@ class Homepage extends Component {
 
   render() {
     return (<div className="App">
-      <Nav/>
       <Header/>
       <About/>
       <Features/>

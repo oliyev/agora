@@ -25,6 +25,9 @@ const nav = (props) => {
             <li className="nav-item">
               <a className="nav-link js-scroll-trigger" href="/#contact">Contact</a>
             </li>
+            <li className="nav-item">
+              <a className="nav-link js-scroll-trigger" onClick={props.loginHandler}>Login</a>
+            </li>
           </ul>
         </div>
       </div>
