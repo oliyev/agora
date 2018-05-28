@@ -22,7 +22,7 @@ import '../../node_modules/jquery.easing/jquery.easing.js'
 //import '../js/creative.js'
 
 import { Route } from 'react-router-dom'
-import isNil from 'lodash/fp/isNil';
+import AutoProgress from 'react-auto-progress'
 
 import axios from 'axios';
 
@@ -91,10 +91,13 @@ class Main extends Component {
 
   }
 
-
   state = {
     displayLogin:false,
-    user:null
+    user:null,
+    username:null,
+    password:null,
+    loginIncorrect:false,
+    progressBar:false
   }
 
   loginClickHandler = () => {
@@ -102,6 +105,13 @@ class Main extends Component {
     this.setState({displayLogin : !doesShow})
     console.log("Show: " + doesShow)
   }
+
+  progressBarHandler = () => {
+    const doesShow = this.state.progressBar;
+    this.setState({progressBar : !doesShow})
+    console.log("Show: " + doesShow)
+  }
+
 
   outsideClickHandler = (e) => {
 
@@ -116,24 +126,69 @@ class Main extends Component {
   }
 
   loginHandler = () => {
-    axios.get('https://agora-spring.herokuapp.com/getUsers')
-      .then(response => {
-        console.log(response);
-        this.setState({user : response.data})
-      })
+    console.log("username: " + this.state.username);
+    console.log("password: " + this.state.password);
 
-    console.log(this.state.user)
+    let bodyFormData = {"username":this.state.username, "password":this.state.password}
+    let self = this;
+
+    //Start the progress Banner
+    self.setState({progressBar:true})
+
+    axios({
+      method: 'post',
+      url: 'https://agora-spring.herokuapp.com/login',
+      data: bodyFormData,
+      config: { headers: {'Content-Type': 'application/json' }}
+    })
+    .then(function (response) {
+        //handle success
+        console.log(response);
+        if(response.data==""){
+          console.log("Login incorrect!")
+          self.setState({loginIncorrect : true});
+        }else{
+          self.state.user = response.data
+          self.setState({loginIncorrect : false});
+          self.loginClickHandler()
+        }
+        console.log(self.state.user)
+    })
+    .catch(function (response) {
+        //handle error
+        console.log(response);
+    });
+  }
+
+  getLoginFormHandler = (e) =>{
+    console.log(e.target.name)
+    this.setState({ [e.target.name] : e.target.value})
   }
 
   render() {
 
     let login = null;
-    console.log("TESTESTSE")
+    let incorrectInput = null;
+    let progress = null;
+
+    if (this.state.loginIncorrect){
+      incorrectInput = <span className="incorrect">The username and password combination is incorrect</span>
+    }
+
+    if (this.state.progressBar){
+      console.log("PROGRESS BAR SHOULD SHOW NOW")
+      progress = <AutoProgress />
+    }
+
     if (this.state.displayLogin){
-      console.log("SHOULD DISPAY LOGIN")
       login = <Login
+        progress = {progress}
+        incorrect={incorrectInput}
         outside={this.outsideClickHandler}
         login={this.loginHandler}
+        username={this.state.username}
+        password={this.state.password}
+        handleChange={this.getLoginFormHandler}
         />
     }
 
