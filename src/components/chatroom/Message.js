@@ -6,31 +6,40 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 class Message extends Component {
   state = {}
 
-  // methods
+  render(props) {
 
-  Message1 = (props) => {
-    console.log(props);
-    if ((props || {}).isFor){
+    if (this.props.stance === 'neutral') {
       return (
-        <h1></h1>
-      );
-    }
-    else {
-      return (
-        <div className="input-group mb-1 col-m10">
-          <img className="m-1 msgimg" src={require("../../img/test-icon.png")} alt="userIcon" />
-          <div className="border msg-cont p-3">
-            <span className="align-middle col-m12 d-block ">{this.props.msg}</span>
+        <div className="input-group mb-3 col-12">
+          <div className="border msg-cont p-3 neut-state">
+            <span className="align-middle col-12 d-block text-center">{'Welcome to the debate room! Both debaters will take turns to discuss on '}</span>
+            <span className="word-emphasis">{this.props.msg.topic}</span>
+            <span>{' starting with agruments '}<span className="word-emphasis">{this.props.msg.startStance ? 'for' : 'against'}</span>{' this topic.'}</span>
           </div>
         </div>
       )
     }
-  }
 
-  render(props) {
-    return (
-      this.Message1(this.props)
-    )
+    if (this.props.stance) {
+      return (
+        <div className="input-group mb-3 col-12">
+          <img className="m-1 msgimg" src={require("../../img/test-icon.png")} alt="userIcon" />
+          <div className="border msg-cont p-3 argFor">
+            <span className="align-middle col-12 d-block text-left">{this.props.msg}</span>
+          </div>
+        </div>
+      )
+    }
+    else {
+      return (
+        <div className="input-group mb-3 col-12">
+          <div className="border msg-cont p-3 argAgainst">
+            <span className="align-middle col-12 d-block text-left">{this.props.msg}</span>
+          </div>
+          <img className="m-1 msgimg" src={require("../../img/test-icon.png")} alt="userIcon" />
+        </div>
+      )
+    }
   }
 }
 

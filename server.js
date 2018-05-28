@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 const amqplib = require('amqplib').connect(url);
 const io = require('socket.io')(server);
 
-let q = 'task';
+let q = 'taskz';
 console.log(url);
 
 
@@ -23,9 +23,9 @@ app.post('/msg', function (req, res, next) {
 
   // Publisher
   amqplib.then(function(conn) {
-    console.log(conn);
     var ok = conn.createChannel();
     ok = ok.then(function(ch) {
+      ch.assertExchange('test','fanout', {durable: false}, (err, ok) => { console.log(err);});
       ch.assertQueue(q);
       ch.sendToQueue(q, new Buffer(msg));
     });
@@ -41,9 +41,8 @@ amqplib.then(function(conn) {
   ok = ok.then(function(ch) {
     ch.assertQueue(q);
     ch.consume(q, function(msg) {
-      console.log('in consume');
-      if (msg !== null) {
-        console.log(msg.content.toString());
+      if (msg !== null && msg.content.toString() !== '') {
+        console.log('consume msg ' + msg.content.toString());
         io.emit('message', msg.content.toString());
         ch.ack(msg);
       }
