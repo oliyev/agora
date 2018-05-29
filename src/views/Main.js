@@ -14,7 +14,6 @@ import jQuery from 'jquery';
 import scrollspy from 'scrollreveal';
 
 import '../../node_modules/font-awesome/css/font-awesome.min.css';
-
 import '../../node_modules/bootstrap/dist/js/bootstrap.bundle.js'
 import '../../node_modules/magnific-popup/dist/jquery.magnific-popup.js'
 import '../../node_modules/jquery/dist/jquery.js';
@@ -22,12 +21,13 @@ import '../../node_modules/jquery.easing/jquery.easing.js'
 //import '../js/creative.js'
 
 import { Route } from 'react-router-dom'
-import AutoProgress from 'react-auto-progress'
 
 import axios from 'axios';
 
-class Main extends Component {
+var Spinner = require('react-spinkit');
 
+class Main extends Component {
+  //The JS originally found in creative.js is loaded here
   componentDidMount() {
 
     (function($) {
@@ -91,28 +91,29 @@ class Main extends Component {
 
   }
 
+
   state = {
     displayLogin:false,
     user:null,
     username:null,
     password:null,
     loginIncorrect:false,
-    progressBar:false
+    progressBar:false,
+    navItem1 : "About",
+    navItem2 : "Features",
+    navItem3 : "Categories",
+    navItem4 : "Contact",
+    navItem5 : "Login / Register",
   }
 
+  //To display login modal, or not, that is the question...
   loginClickHandler = () => {
     const doesShow = this.state.displayLogin;
     this.setState({displayLogin : !doesShow})
     console.log("Show: " + doesShow)
   }
 
-  progressBarHandler = () => {
-    const doesShow = this.state.progressBar;
-    this.setState({progressBar : !doesShow})
-    console.log("Show: " + doesShow)
-  }
-
-
+  //Handles whether or not the user clicks outside of the login modal
   outsideClickHandler = (e) => {
 
     if(e.target == document.getElementsByClassName('greyback')[0]){
@@ -125,6 +126,8 @@ class Main extends Component {
     }
   }
 
+  //This function sends are request to AgoraWS and handles login
+  //If success -> populate user object in the state
   loginHandler = () => {
     console.log("username: " + this.state.username);
     console.log("password: " + this.state.password);
@@ -133,6 +136,7 @@ class Main extends Component {
     let self = this;
 
     //Start the progress Banner
+    console.log("SET PROGRESS BAR TO TRUE")
     self.setState({progressBar:true})
 
     axios({
@@ -145,13 +149,18 @@ class Main extends Component {
         //handle success
         console.log(response);
         if(response.data==""){
-          console.log("Login incorrect!")
+          //Login Unsuccessful
           self.setState({loginIncorrect : true});
         }else{
+          //Login Successful
           self.state.user = response.data
           self.setState({loginIncorrect : false});
           self.loginClickHandler()
+          //Change the nav menu
+          let titles = ["Home", "Test", "Test2", "Test3", "Debate"]
+          self.handleMenuChange(titles, null)
         }
+        self.turnOffProgressBar();
         console.log(self.state.user)
     })
     .catch(function (response) {
@@ -160,6 +169,22 @@ class Main extends Component {
     });
   }
 
+  handleMenuChange = (titles, links) => {
+    this.setState({
+      navItem1 : titles[0],
+      navItem2 : titles[1],
+      navItem3 : titles[2],
+      navItem4 : titles[3],
+      navItem5 : titles[4]
+    })
+  }
+
+  //re-usable function to turn off the progress bar (pacman)
+  turnOffProgressBar = () => this.setState({progressBar:true});
+
+
+  //This function check information from the login inputs and sets state
+  //The purpose is to use infomation to then send to AgoraWS
   getLoginFormHandler = (e) =>{
     console.log(e.target.name)
     this.setState({ [e.target.name] : e.target.value})
@@ -167,22 +192,25 @@ class Main extends Component {
 
   render() {
 
+    //the following are conditional elements, if false, then display nothing
     let login = null;
     let incorrectInput = null;
     let progress = null;
 
+    //check if we need to display incorrect login warning
     if (this.state.loginIncorrect){
       incorrectInput = <span className="incorrect">The username and password combination is incorrect</span>
     }
 
-    if (this.state.progressBar){
+    //check if we need to display the progress bar
+    if (this.state.progressBar && !this.state.loginIncorrect){
       console.log("PROGRESS BAR SHOULD SHOW NOW")
-      progress = <AutoProgress />
+      progress = <Spinner name="pacman" className="pacman2" color="#ee4b28"/>
     }
 
+    //if user clicks on login, display the login screen
     if (this.state.displayLogin){
       login = <Login
-        progress = {progress}
         incorrect={incorrectInput}
         outside={this.outsideClickHandler}
         login={this.loginHandler}
@@ -192,18 +220,23 @@ class Main extends Component {
         />
     }
 
+    //This following is what will actualy render
     return (
       <div className="App">
-        <Nav loginHandler={this.loginClickHandler}/>
+        <Nav loginHandler={this.loginClickHandler}
+            title1={this.state.navItem1}
+            title2={this.state.navItem2}
+            title3={this.state.navItem3}
+            title4={this.state.navItem4}
+            title5={this.state.navItem5}
+          />
         {login}
+        {progress}
         <Route exact path="/" render={() =>
           <div>
             <Homepage />
           </div> }/>
-
         <Route path="/debate" render={() => <Chatroom /> }/>
-
-        <Route path="/login" render={() => <Login /> }/>
       </div>
   );}
 }

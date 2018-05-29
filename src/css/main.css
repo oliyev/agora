@@ -24,6 +24,20 @@ body{
 	cursor:pointer;
 }
 
+.progress{
+  position:fixed;
+  width:100%;
+  height:100%;
+  background-color: transparent;
+  display:flex;
+}
+
+.pacman2{
+  position:fixed !important;
+  margin:19% 49%;
+	z-index:10000000000;
+}
+
 .headerStyle{
 	margin-top:150px;
 }

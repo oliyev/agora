@@ -22,6 +22,7 @@
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.1.4",
+    "react-spinkit": "^3.0.0",
     "scrollreveal": "3.4.0",
     "socket.io": "^2.1.1",
     "sockjs": "^0.3.19"
