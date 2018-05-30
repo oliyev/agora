@@ -10,10 +10,16 @@ body{
 }
 
 :root {
+	--prim: #ff775d; /*orange*/
+	--sec: #556370; /*grey*/
+	--accent: #737495; /*purp grey*/
+
 	--msgcont-height: 60px;
 	--msgcont-width: calc(100% - (var(--msgcont-height) + .50rem));
 	--msgcont-bradius: calc(var(--msgcont-height) / 2);
 	--msgimg-wh: calc(var(--msgcont-height) - .50rem);
+
+	--status-h: 40px;
 }
 
 .logo{
@@ -76,9 +82,9 @@ body{
 
 .neut-state {
 		color: #fff;
-		background-color: #737495;
+		background-color: var(--sec);
 		width: 100% !important;
-		border-radius: 15px;
+		border-radius: 5px;
 }
 
 .word-emphasis {
@@ -87,6 +93,12 @@ body{
 	color: #f5a46c;
 }
 
+.status-bar-cont {
+	height: var(--status-h);
+	background-color: var(--sec);
+	border-radius: 5px 5px 0px 0px;
+	color: #fff
+}
 .homepagebg {
   background-image: url("../img/socrates.png");
 	opacity: 0.95;
