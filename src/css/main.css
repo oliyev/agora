@@ -26,6 +26,10 @@ body{
 	width:50px;
 }
 
+.validationFailed{
+	border:2px solid red !important;
+}
+
 .nav-link{
 	cursor:pointer;
 }
@@ -42,6 +46,11 @@ body{
   position:fixed !important;
   margin:19% 49%;
 	z-index:10000000000;
+}
+
+.form-error{
+	font-size: 11px;
+	color:red;
 }
 
 .headerStyle{

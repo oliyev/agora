@@ -147,7 +147,11 @@
 }
 
 .forgot-password {
-    color: rgb(104, 145, 162);
+    color: rgb(87, 177, 198) !important;
+}
+
+.forgot-password:hover{
+  cursor:pointer;
 }
 
 .forgot-password:hover,

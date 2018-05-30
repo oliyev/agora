@@ -5,6 +5,7 @@ import Nav from '../components/common/Nav'
 import Homepage from './Homepage'
 import Chatroom from './Chatroom'
 import Login from '../components/login/Login'
+import Register from '../components/register/Register'
 
 import '../css/App.css';
 
@@ -94,16 +95,28 @@ class Main extends Component {
 
   state = {
     displayLogin:false,
+    displayRegister:false,
     user:null,
-    username:null,
-    password:null,
+    username:"",
+    password:"",
+    passwordConfirm:"",
+    email : "",
+    country:"",
     loginIncorrect:false,
     progressBar:false,
+    valid1:'form-control',
+    valid2:'form-control',
+    valid3:'form-control',
+    valid4:'form-control',
     navItem1 : "About",
     navItem2 : "Features",
     navItem3 : "Categories",
     navItem4 : "Contact",
     navItem5 : "Login / Register",
+    passwordMatch:null,
+    passwordLength:null,
+    usernameLength:null,
+    validEmail:null
   }
 
   //To display login modal, or not, that is the question...
@@ -113,33 +126,83 @@ class Main extends Component {
     console.log("Show: " + doesShow)
   }
 
+  //To display login modal, or not, that is the question...
+  registerDisplayHandler = () => {
+    const doesShow = this.state.displayRegister;
+    this.setState({displayRegister : !doesShow, displayLogin: false})
+    console.log("Show: " + doesShow)
+  }
+
   //Handles whether or not the user clicks outside of the login modal
   outsideClickHandler = (e) => {
 
     if(e.target == document.getElementsByClassName('greyback')[0]){
-      console.log("TRUE");
-      const doesShow = this.state.displayLogin;
-      this.setState({displayLogin : !doesShow})
+      this.setState({displayLogin : false, displayRegister:false})
     }
     else{
-      console.log("FALSE")
+      //console.log("FALSE")
     }
   }
 
-  //This function sends are request to AgoraWS and handles login
+  //This function sends a request to AgoraWS and handles login
   //If success -> populate user object in the state
   loginHandler = () => {
-    console.log("username: " + this.state.username);
-    console.log("password: " + this.state.password);
 
     let bodyFormData = {"username":this.state.username, "password":this.state.password}
     let self = this;
 
     //Start the progress Banner
-    console.log("SET PROGRESS BAR TO TRUE")
     self.setState({progressBar:true})
 
     axios({
+      method: 'post',
+      url: 'https://agora-spring.herokuapp.com/login',
+      data: bodyFormData,
+      config: { headers: {'Content-Type': 'application/json' }}
+    })
+    .then(function (response) {
+        //handle success
+        //console.log(response);
+        if(response.data==""){
+          //Login Unsuccessful
+          self.setState({loginIncorrect : true});
+        }else{
+          //Login Successful
+          self.state.user = response.data
+          self.setState({loginIncorrect : false});
+          self.loginClickHandler()
+          //Change the nav menu
+          let titles = ["Home", "Test", "Test2", "Test3", "Debate"]
+          self.handleMenuChange(titles, null)
+        }
+        self.turnOffProgressBar();
+        //console.log(self.state.user)
+    })
+    .catch(function (response) {
+        //handle error
+        //console.log(response);
+    });
+  }
+
+  //This function sends a request to AgotaWS to handle registry after
+  //some client side validation
+  registrationHandler = () => {
+
+    //reset validation states
+    this.setState({
+      valid1:'form-control',
+      valid2:'form-control',
+      valid3:'form-control',
+      valid4:'form-control'
+    })
+
+    let self = this;
+
+    console.log("In Registration Handler")
+
+
+
+    /*axios({
       method: 'post',
       url: 'https://agora-spring.herokuapp.com/login',
       data: bodyFormData,
@@ -166,7 +229,9 @@ class Main extends Component {
     .catch(function (response) {
         //handle error
         console.log(response);
-    });
+    });*/
+
+
   }
 
   handleMenuChange = (titles, links) => {
@@ -187,15 +252,123 @@ class Main extends Component {
   //The purpose is to use infomation to then send to AgoraWS
   getLoginFormHandler = (e) =>{
     console.log(e.target.name)
-    this.setState({ [e.target.name] : e.target.value})
+
+  }
+
+  registerFormSimpleInputsHandler = (e) => {
+    console.log("VALIDATING BITCH")
+    //this.setState({ [e.target.name] : e.target.value })
+    let error1 = this.state.usernameLength,
+        error2 = this.state.passwordLength,
+        error3 = this.state.passwordMatch,
+        error4
+    let valid1 = this.state.valid1,
+        valid2 = this.state.valid2,
+        valid3 = this.state.valid3,
+        valid4 = this.state.valid4
+
+    //validation
+    //1. if passwords do not match
+
+    switch(e.target.name){
+      case "username":
+        if (e.target.value.length < 3 && e.target.value !=""){
+            error1 = "Username must be at least 3 characters"
+            valid1 = "form-control validationFailed"
+        }
+        else{
+          error1 = ""
+          valid1 = "form-control"
+        }
+        break;
+      case "password":
+        if (e.target.value.length < 5 && e.target.value !=""){
+          console.log("-----> PASSWORD TOO SHORT")
+            error2 = "Password must be at least 5 characters"
+            valid2 = "form-control validationFailed"
+        }
+        else{
+          error2 = ""
+          valid2 = "form-control"
+        }
+        break;
+      case "passwordConfirm":
+        if (e.target.value != this.state.password){
+          console.log("-----> PASSWORDS MISMATCH")
+          error3 = "Passwords do not match"
+          valid2 = "form-control validationFailed"
+          valid3 = 'form-control validationFailed'
+        }
+        else{
+          error3 = ""
+          valid2 = "form-control"
+          valid3 = "form-control"
+        }
+        break;
+    }
+
+
+    /*if (this.state.password != this.state.passwordConfirm){
+      console.log("-----> PASSWORDS MISMATCH")
+      this.state.passwordMatch = "Passwords do not match"
+      valid2 = "form-control validationFailed"
+      valid3 = 'form-control validationFailed'
+    }
+
+    //2. Password too short
+    if (this.state.password.length < 5 && this.state.password !=""){
+      console.log("-----> PASSWORD TOO SHORT")
+        error2 = "Password must be at least 5 characters"
+    }
+
+    //3. Username too short
+    if (this.state.username.length < 3 && this.state.username !=""){
+        error1 = "Username must be at least 3 characters"
+    }*/
+
+    this.setState({
+        [e.target.name] : e.target.value,
+        usernameLength: error1,
+        passwordLength: error2,
+        passwordMatch: error3,
+        valid1 : valid1,
+        valid2 : valid2,
+        valid3 : valid3
+    })
+
   }
 
   render() {
 
+    console.log("RENDERING......")
+
     //the following are conditional elements, if false, then display nothing
     let login = null;
+    let register = null;
     let incorrectInput = null;
     let progress = null;
+
+    //error for username
+    let error1 = null;
+    //error for password length
+    let error2 = null;
+    //error for password mismatch
+    let error3 = null;
+    //error for invalid email
+    let error4 = null;
+
+    if (this.state.usernameLength != ""){
+      error1 = <span className="form-error">{this.state.usernameLength}</span>
+    }
+    if (this.state.passwordLength != ""){
+      error2 = <span className="form-error">{this.state.passwordLength}</span>
+    }
+    if (this.state.passwordMatch != ""){
+      error3 = <span className="form-error">{this.state.passwordMatch}</span>
+    }
+    if (this.state.validEmail != ""){
+      error4 = <span className="form-error">{this.state.validEmail}</span>
+    }
 
     //check if we need to display incorrect login warning
     if (this.state.loginIncorrect){
@@ -204,7 +377,7 @@ class Main extends Component {
 
     //check if we need to display the progress bar
     if (this.state.progressBar && !this.state.loginIncorrect){
-      console.log("PROGRESS BAR SHOULD SHOW NOW")
+      //console.log("PROGRESS BAR SHOULD SHOW NOW")
       progress = <Spinner name="pacman" className="pacman2" color="#ee4b28"/>
     }
 
@@ -217,8 +390,26 @@ class Main extends Component {
         username={this.state.username}
         password={this.state.password}
         handleChange={this.getLoginFormHandler}
+        displayReg={this.registerDisplayHandler}
         />
     }
+
+    //if the user clicks register, display register form
+    if (this.state.displayRegister){
+      //console.log("Display Registration form from Render()")
+      register = <Register
+          outside={this.outsideClickHandler}
+          validationFailed1 = {this.state.valid1}
+          validationFailed2 = {this.state.valid2}
+          validationFailed3 = {this.state.valid3}
+          validationFailed4 = {this.state.valid4}
+          register={this.registrationHandler}
+          handleChange={this.registerFormSimpleInputsHandler}
+          error1={error1}
+          error2={error2}
+          error3={error3}
+          error4={error4}
+        />}
 
     //This following is what will actualy render
     return (
@@ -231,6 +422,7 @@ class Main extends Component {
             title5={this.state.navItem5}
           />
         {login}
+        {register}
         {progress}
         <Route exact path="/" render={() =>
           <div>

@@ -4,7 +4,7 @@
 /*
  * General styles
  */
-.container-login {
+.container-register {
     position:fixed;
     z-index:100000;
     height: 100%;
@@ -22,7 +22,7 @@
 
 .card-container.card {
     max-width: 350px;
-    padding: 70px 40px;
+    padding: 40px 40px;
 }
 
 /*.btn2 {
@@ -147,7 +147,7 @@
 }
 
 .forgot-password {
-    color: rgb(104, 145, 162);
+    color: rgb(78, 46, 107) !important;
 }
 
 .forgot-password:hover,
