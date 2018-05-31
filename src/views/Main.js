@@ -243,6 +243,7 @@ class Main extends Component {
   }
 
   handleMenuChange = (titles, links) => {
+    console.loog
     this.setState({
       navItem1 : titles[0],
       navItem2 : titles[1],
