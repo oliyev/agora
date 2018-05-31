@@ -113,16 +113,22 @@ class Main extends Component {
     navItem3 : "Categories",
     navItem4 : "Contact",
     navItem5 : "Login / Register",
-    passwordMatch:null,
-    passwordLength:null,
-    usernameLength:null,
-    validEmail:null
+    navLink1 : "/#about",
+    navLink2 : "/#features",
+    navLink3 : "/#categories",
+    navLink4 : "/#contact",
+    navLink5 : null,
+    passwordMatch:"",
+    passwordLength:"",
+    usernameLength:"",
+    validEmail:"",
+    regDisabled:true
   }
 
   //To display login modal, or not, that is the question...
   loginClickHandler = () => {
     const doesShow = this.state.displayLogin;
-    this.setState({displayLogin : !doesShow})
+    this.setState({displayLogin : !doesShow, displayRegister : false})
     console.log("Show: " + doesShow)
   }
 
@@ -172,8 +178,9 @@ class Main extends Component {
           self.setState({loginIncorrect : false});
           self.loginClickHandler()
           //Change the nav menu
-          let titles = ["Home", "Test", "Test2", "Test3", "Debate"]
-          self.handleMenuChange(titles, null)
+          let titles = ["Home", "Debate", "Friends", "Resources", "Wiki"]
+          let links = ["/", "/debate", '/friends', '/resourses', 'wiki']
+          self.handleMenuChange(titles, links)
         }
         self.turnOffProgressBar();
         //console.log(self.state.user)
@@ -188,48 +195,49 @@ class Main extends Component {
   //some client side validation
   registrationHandler = () => {
 
-    //reset validation states
-    this.setState({
-      valid1:'form-control',
-      valid2:'form-control',
-      valid3:'form-control',
-      valid4:'form-control'
-    })
-
+    //At this point, client side validation has already been done
     let self = this;
+    let bodyFormData = {
+	       "username":this.state.username,
+	       "password":this.state.password,
+	       "email":this.state.email
+       }
 
-    console.log("In Registration Handler")
+    //Start the progress Banner
+    self.setState({progressBar:true})
 
-
-
-    /*axios({
+    axios({
       method: 'post',
-      url: 'https://agora-spring.herokuapp.com/login',
+      url: 'https://agora-spring.herokuapp.com/register',
       data: bodyFormData,
       config: { headers: {'Content-Type': 'application/json' }}
     })
     .then(function (response) {
         //handle success
-        console.log(response);
-        if(response.data==""){
-          //Login Unsuccessful
-          self.setState({loginIncorrect : true});
-        }else{
-          //Login Successful
-          self.state.user = response.data
-          self.setState({loginIncorrect : false});
-          self.loginClickHandler()
+        console.log(response)
+        if (response.data == "exists"){
+          console.log("USERNAME ALREADY EXISTS")
+          let error1 = "This username already exists"
+          let valid1 = "form-control validationFailed"
+          self.setState({
+              usernameLength: error1,
+              valid1 : valid1,
+              progressBar:false
+          })
+        } else{
+          console.log("NEW USER CREATED!!")
+          self.resetErrors()
+          self.setState({displayRegister:false, user:response.data, progressBar:false})
           //Change the nav menu
-          let titles = ["Home", "Test", "Test2", "Test3", "Debate"]
-          self.handleMenuChange(titles, null)
+          let titles = ["Home", "Debate", "Friends", "Resources", "Wiki"]
+          let links = ["/", "/debate", '/friends', '/resourses', '/wiki']
+          self.handleMenuChange(titles, links)
         }
-        self.turnOffProgressBar();
-        console.log(self.state.user)
     })
     .catch(function (response) {
         //handle error
         console.log(response);
-    });*/
+    });
 
 
   }
@@ -240,37 +248,62 @@ class Main extends Component {
       navItem2 : titles[1],
       navItem3 : titles[2],
       navItem4 : titles[3],
-      navItem5 : titles[4]
+      navItem5 : titles[4],
+      navLins1 : links[0],
+      navLins2 : links[1],
+      navLins3 : links[2],
+      navLins4 : links[3],
+      navLins5 : links[4],
     })
   }
 
+  //Regex for making sure that an email is entered in the proper format
+  validateEmail = (email) => {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+  }
+
   //re-usable function to turn off the progress bar (pacman)
-  turnOffProgressBar = () => this.setState({progressBar:true});
+  turnOffProgressBar = () => this.setState({progressBar:false});
 
 
   //This function check information from the login inputs and sets state
   //The purpose is to use infomation to then send to AgoraWS
   getLoginFormHandler = (e) =>{
-    console.log(e.target.name)
+    //e.target.name => the name attribute of the input being returned
+    //e.target.value => the value of said attribute
+    this.setState({[e.target.name] : e.target.value})
+  }
 
+  resetErrors = () => {
+    this.setState({
+        usernameLength: "",
+        passwordLength: "",
+        passwordMatch: "",
+        validEmail : "",
+        valid1 : 'form-control',
+        valid2 : 'form-control',
+        valid3 : 'form-control',
+        valid4 : 'form-control'
+    })
   }
 
   registerFormSimpleInputsHandler = (e) => {
-    console.log("VALIDATING BITCH")
-    //this.setState({ [e.target.name] : e.target.value })
+
+    //pull the current values of the error values
+    //the error(n) values correspond to the actual error message
     let error1 = this.state.usernameLength,
         error2 = this.state.passwordLength,
         error3 = this.state.passwordMatch,
-        error4
+        error4 = this.state.validEmail
+    //the valid(n) values correspond to the css styling that comes with error
     let valid1 = this.state.valid1,
         valid2 = this.state.valid2,
         valid3 = this.state.valid3,
         valid4 = this.state.valid4
 
-    //validation
-    //1. if passwords do not match
-
     switch(e.target.name){
+      //if username is the target -> check appropriate length
       case "username":
         if (e.target.value.length < 3 && e.target.value !=""){
             error1 = "Username must be at least 3 characters"
@@ -281,6 +314,7 @@ class Main extends Component {
           valid1 = "form-control"
         }
         break;
+      //if password is the target -> check appropriate length
       case "password":
         if (e.target.value.length < 5 && e.target.value !=""){
           console.log("-----> PASSWORD TOO SHORT")
@@ -292,6 +326,7 @@ class Main extends Component {
           valid2 = "form-control"
         }
         break;
+      //if confirm password is the target -> check that passwords match
       case "passwordConfirm":
         if (e.target.value != this.state.password){
           console.log("-----> PASSWORDS MISMATCH")
@@ -305,48 +340,51 @@ class Main extends Component {
           valid3 = "form-control"
         }
         break;
-    }
+      //if email is the target -> validate via regex
+      case "email":
+        if (!this.validateEmail(e.target.value) && e.target.value != ""){
+          console.log("EMAIL IS INVALID")
+          error4 = "Email is not valid"
+          valid4 = "form-control validationFailed"
+        }
+        else{
+          error4 = ""
+          valid4 = "form-control"
+        }
+        break;
+    } // end of switch
 
-
-    /*if (this.state.password != this.state.passwordConfirm){
-      console.log("-----> PASSWORDS MISMATCH")
-      this.state.passwordMatch = "Passwords do not match"
-      valid2 = "form-control validationFailed"
-      valid3 = 'form-control validationFailed'
-    }
-
-    //2. Password too short
-    if (this.state.password.length < 5 && this.state.password !=""){
-      console.log("-----> PASSWORD TOO SHORT")
-        error2 = "Password must be at least 5 characters"
-    }
-
-    //3. Username too short
-    if (this.state.username.length < 3 && this.state.username !=""){
-        error1 = "Username must be at least 3 characters"
-    }*/
-
+    /*****************************************************************
+    *   Validation is triggered on the onBlur event for every input (Register.js)
+    *   Once the states are updated, we can setState() and trigger a
+    *   re-render
+    ******************************************************************/
     this.setState({
+        //e.target.name => the name attribute of the input being returned
+        //e.target.value => the value of said attribute
         [e.target.name] : e.target.value,
         usernameLength: error1,
         passwordLength: error2,
         passwordMatch: error3,
+        validEmail : error4,
         valid1 : valid1,
         valid2 : valid2,
-        valid3 : valid3
+        valid3 : valid3,
+        valid4 : valid4
     })
 
   }
 
   render() {
 
-    console.log("RENDERING......")
-
+    console.log("RENDERING......") //Testing lifecylcle -> test exactly when render function is called
+    console.log(this.state)
     //the following are conditional elements, if false, then display nothing
-    let login = null;
-    let register = null;
-    let incorrectInput = null;
-    let progress = null;
+    let login = null; //if not null -> display login modal
+    let register = null; // if not null -> display register modal
+    let incorrectInput = null; // -> if not null, display incorrect login
+    let progress = null; //-> if not null, display progress graphics
+    let regButton = null; // do we display the register button or not?
 
     //error for username
     let error1 = null;
@@ -357,6 +395,7 @@ class Main extends Component {
     //error for invalid email
     let error4 = null;
 
+    //Generate the spans for the error messages
     if (this.state.usernameLength != ""){
       error1 = <span className="form-error">{this.state.usernameLength}</span>
     }
@@ -394,6 +433,19 @@ class Main extends Component {
         />
     }
 
+
+    if (this.state.usernameLength == ""
+        && this.state.passwordMatch == ""
+        && this.state.passwordLength == ""
+        && this.state.validEmail == ""
+        && this.state.username != ""
+        && this.state.password != ""
+        && this.state.passwordConfirm != ""
+        && this.state.email != ""
+    ){
+      regButton = <button onClick={this.registrationHandler} className="btn2 btn-lg btn-primary btn-block btn-signin">Register</button>
+    }
+
     //if the user clicks register, display register form
     if (this.state.displayRegister){
       //console.log("Display Registration form from Render()")
@@ -403,12 +455,17 @@ class Main extends Component {
           validationFailed2 = {this.state.valid2}
           validationFailed3 = {this.state.valid3}
           validationFailed4 = {this.state.valid4}
-          register={this.registrationHandler}
           handleChange={this.registerFormSimpleInputsHandler}
           error1={error1}
           error2={error2}
           error3={error3}
           error4={error4}
+          regButton={regButton}
+          loginHandler={this.loginClickHandler}
+          username={this.state.username}
+          password={this.state.password}
+          passwordConfirm={this.state.passwordConfirm}
+          email={this.state.email}
         />}
 
     //This following is what will actualy render
@@ -420,6 +477,11 @@ class Main extends Component {
             title3={this.state.navItem3}
             title4={this.state.navItem4}
             title5={this.state.navItem5}
+            navLink1={this.state.navLink1}
+            navLink2={this.state.navLink2}
+            navLink3={this.state.navLink3}
+            navLink4={this.state.navLink4}
+            navLink5={this.state.navLink5}
           />
         {login}
         {register}

@@ -10,22 +10,21 @@ const register = (props) => {
               <div className="form-signin">
                 <span id="reauth-email" className="reauth-email"></span>
                 {props.error1}
-                <input onBlur={props.handleChange} name="username" type="email" id="registerUsernmae" className={props.validationFailed1} placeholder="Username" required autoFocus/>
+                <input onChange={props.handleChange} value={props.username} name="username" type="email" id="registerUsernmae" className={props.validationFailed1} placeholder="Username" required autoFocus/>
                 {props.error2}
-                <input onBlur={props.handleChange} name="password" type="password" id="registerPassword" className={props.validationFailed2} placeholder="Password" required/>
+                <input onChange={props.handleChange} value={props.password} name="password" type="password" id="registerPassword" className={props.validationFailed2} placeholder="Password" required/>
                 {props.error3}
-                <input onBlur={props.handleChange} name="passwordConfirm" type="password" id="registerPassword2" className={props.validationFailed3} placeholder="Confirm Password" required/>
+                <input onChange={props.handleChange} value={props.passwordConfirm} name="passwordConfirm" type="password" id="registerPassword2" className={props.validationFailed3} placeholder="Confirm Password" required/>
                 {props.error4}
-                <input onBlur={props.handleChange} name="email" type="password" id="registerEmail" className={props.validationFailed4} placeholder="Email address" required/>
-                <input onBlur={props.handleChange} name="country" type="password" id="registerCountry" className="form-control {props.validationFailed}" placeholder="Country" required/>
+                <input onChange={props.handleChange} value={props.email} name="email" type="text" id="registerEmail" className={props.validationFailed4} placeholder="Email address" required/>
                 <div id="remember" className="checkbox">
                     <label>
-                        <input type="checkbox" value="remember-me"/> Remember me
+                        <input type="checkbox" value="remember-me"/> Confirm you are not a robot
                     </label>
                 </div>
-                <button onClick={props.register} className="btn2 btn-lg btn-primary btn-block btn-signin">Register</button>
+                {props.regButton}
               </div>
-            <a className="forgot-password">
+            <a className="forgot-password" onClick={props.loginHandler}>
                 Already Registered? Login here!
             </a>
         </div>
