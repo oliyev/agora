@@ -63,7 +63,7 @@ class Chatroom extends Component {
       )
 
       chatroom = (
-        <div className="chat-max mx-auto mt-10 shadow-md p-3 mb-1">
+        <div className="col-9 chat-max mx-auto mt-10 shadow-md p-3 mb-1">
           <ChatStatusBar timer={this.state.timer}/>
           {messages}
           <Chatbox disabled={false} debateId={this.state.debate._id}/>
@@ -72,9 +72,9 @@ class Chatroom extends Component {
     }
 
     return (
-      <div className="chat-container">
+      <div className="chat-container row">
         {loading}
-        <div className="side-chatmenu"></div>
+        <div className="col-3 side-chatmenu">{'fancy ass menu'}</div>
         {chatroom}
       </div>
     );

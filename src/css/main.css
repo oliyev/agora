@@ -24,14 +24,14 @@ body{
 	--status-h: 40px;
 }
 
-/*.side-chatmenu {
+.side-chatmenu {
 	background-color: var(--sec);
 	display: inline-block;
-	width: var(--side-menu-w);
-	/* height: var(--side-menu-h);
+	max-width: var(--side-menu-w) !important;
 	height: 100%;
 	margin: 0;
-}*/
+	color: white;
+}
 
 .navigation {
 	background-image: linear-gradient(90deg,#37cc9a 10%,#45babf 90%);
@@ -40,12 +40,13 @@ body{
 .chat-container{
 	text-align: center;
 	width: 100%;
+	height: 1000px;
 }
 
 .chat-max {
 	margin-left: var(--side-menu-w);
-	width: 91.6667%;
 	max-width: 900px;
+	height: 100%;
 	display: inline-block;
 }
 .container-modal {
