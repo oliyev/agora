@@ -11,15 +11,57 @@ body{
 
 :root {
 	--prim: #ff775d; /*orange*/
-	--sec: #556370; /*grey*/
+	--sec: #3c3d51; /*grey*/
 	--accent: #737495; /*purp grey*/
 
+	--side-menu-w: 250px;
+	--side-menu-h: 700px;
 	--msgcont-height: 60px;
 	--msgcont-width: calc(100% - (var(--msgcont-height) + .50rem));
 	--msgcont-bradius: calc(var(--msgcont-height) / 2);
 	--msgimg-wh: calc(var(--msgcont-height) - .50rem);
 
 	--status-h: 40px;
+}
+
+/*.side-chatmenu {
+	background-color: var(--sec);
+	display: inline-block;
+	width: var(--side-menu-w);
+	/* height: var(--side-menu-h);
+	height: 100%;
+	margin: 0;
+}*/
+
+.navigation {
+	background-image: linear-gradient(90deg,#37cc9a 10%,#45babf 90%);
+}
+
+.chat-container{
+	text-align: center;
+	width: 100%;
+}
+
+.chat-max {
+	margin-left: var(--side-menu-w);
+	width: 91.6667%;
+	max-width: 900px;
+	display: inline-block;
+}
+.container-modal {
+    position:fixed;
+    z-index:100000;
+    height: 100%;
+    width:100%;
+		background-image: linear-gradient(90deg,#37cc9a 10%,#45babf 90%);
+}
+
+.mt-10 {
+		margin-top: 75px;
+}
+
+.btn-agora {
+	background-image: linear-gradient(90deg,#37cc9a 10%,#45babf 90%);
 }
 
 .logo{
@@ -47,6 +89,14 @@ body{
   margin:19% 49%;
 	z-index:10000000000;
 }
+.loading-text{
+	font-weight: bold;
+	color: #ff775d;
+  position:fixed !important;
+	width: 350px;
+  margin:25% calc(49% - (350px/2));
+	z-index:10000000000;
+}
 
 .form-error{
 	font-size: 11px;
@@ -63,7 +113,7 @@ body{
 
 /* chat style */
 .chat-height {
-	height: 450px;
+	height: var(--side-menu-h);
 	overflow: auto;
 }
 
