@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import io from 'socket.io-client';
 import Header from '../components/common/Header';
 import Chatbox from '../components/chatroom/Chatbox';
@@ -18,7 +19,7 @@ class Chatroom extends Component {
   state = {
     id: '',
     ws: {},
-    loading: true,
+    isLoading: true,
     user: {
       id: 'u-12345',
       stance: FOR
@@ -38,7 +39,7 @@ class Chatroom extends Component {
     this.state.ws.on('message', (data) => this.addMessage(data));
     this.state.ws.on('debateCreated', (debate) => this.initChatroom(debate));
     this.state.ws.on('chatroomReady', (data) => this.chatroomReadyHandler(data));
-    this.state.ws.emit('gotDebateId', {debateId: 'r-409089', user: this.state.user});
+    this.state.ws.emit('gotDebateId', {debateId: this.props.debate._id, user: this.props.user});
 
     this.state.introMsg['topic'] = this.state.topic || 'oops no topic';
     // let oli = 'a really good link https://getbootstrap.com/docs/4.1/utilities/spacing/ which you can consult anytime'.match(utils.URLREGEX);
@@ -49,7 +50,7 @@ class Chatroom extends Component {
 
     let loading, messages, chatroom;
 
-    if (this.state.loading) {
+    if (this.props.isLoading) {
         loading = <LoadingDebate />
     }
     else {
@@ -66,7 +67,7 @@ class Chatroom extends Component {
         <div className="col-9 chat-max mx-auto mt-10 shadow-md p-3 mb-1">
           <ChatStatusBar timer={this.state.timer}/>
           {messages}
-          <Chatbox disabled={false} debateId={this.state.debate._id}/>
+          <Chatbox disabled={this.props.debate.false} debateId={this.props.debate._id}/>
         </div>
       )
     }
@@ -93,7 +94,7 @@ class Chatroom extends Component {
     messages.push(message);
     this.setState({
       messages:messages,
-      stance: this.state.stance ? AGAINST : FOR
+      stance: this.props.stance
     })
 
     let chat = document.querySelector('#chatoutput');
@@ -102,17 +103,18 @@ class Chatroom extends Component {
 
   initChatroom (debate) {
     console.log('initiating debate room (debateCreated)');
+    this.props.onSetDebate(debate);
     this.setState({
       stance: debate.startStance,
-      id: debate._id,
       debate: debate
-    })
+    });
   }
 
   chatroomReadyHandler (data) {
       console.log('chatroom ready (joined room)');
-      console.log(data);
-      this.setState({ loading: false, debate: data.debate });
+      this.props.onSetIsLoading(false);
+      this.props.onSetDebate(data.debate);
+      this.setState({ isLoading: false, debate: data.debate });
   }
 
   updateTimer (data) {
@@ -121,4 +123,23 @@ class Chatroom extends Component {
 
 }
 
-export default Chatroom;
+// accessible by this.props.[property] in the render function
+const mapStateToProps = state => {
+  return {
+    debate: state.debate,
+    ws: state.webSocket,
+    isLoading: state.isLoading,
+    user: state.user,
+    stance: (state.debate || {}).debatingStance,
+    timer: state.timer
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onSetDebate: (debate) => dispatch({ type: 'SET_DEBATE', debate }),
+    onSetIsLoading: (isLoading) => dispatch({ type: 'SET_IS_LOADING', isLoading })
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Chatroom);
