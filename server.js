@@ -22,7 +22,7 @@ app.use(function(req, res, next) {
 });
 
 ///////////////////// HTTP REQUEST HANDLERS
-app.post('/msg', function (req, res, next) {
+app.post('/msg', function (req, res, next) {x
   let msg = req.body.msg;
 
   // Publisher
