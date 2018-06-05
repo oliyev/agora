@@ -18,7 +18,6 @@ class Chatroom extends Component {
 
   state = {
     id: '',
-    ws: {},
     isLoading: true,
     user: {
       id: 'u-12345',
@@ -34,12 +33,13 @@ class Chatroom extends Component {
 
   // lifecycle events
   componentWillMount () {
-    this.state.ws = io.connect('http://127.0.0.1:4000/');
-    this.state.ws.on('connect', (data) => this.onConnect(data));
-    this.state.ws.on('message', (data) => this.addMessage(data));
-    this.state.ws.on('debateCreated', (debate) => this.initChatroom(debate));
-    this.state.ws.on('chatroomReady', (data) => this.chatroomReadyHandler(data));
-    this.state.ws.emit('gotDebateId', {debateId: this.props.debate._id, user: this.props.user});
+    let ws = io.connect('http://127.0.0.1:4000/');
+    ws.on('connect', (data) => this.onConnect(data));
+    ws.on('message', (data) => this.addMessage(data));
+    ws.on('debateCreated', (debate) => this.initChatroom(debate));
+    ws.on('chatroomReady', (data) => this.chatroomReadyHandler(data));
+    ws.emit('gotDebateId', {debateId: this.props.debate._id, user: this.props.user});
+    this.props.onSetWebSocket(ws);
 
     this.state.introMsg['topic'] = this.state.topic || 'oops no topic';
     // let oli = 'a really good link https://getbootstrap.com/docs/4.1/utilities/spacing/ which you can consult anytime'.match(utils.URLREGEX);
@@ -67,7 +67,7 @@ class Chatroom extends Component {
         <div className="col-9 chat-max mx-auto mt-10 shadow-md p-3 mb-1">
           <ChatStatusBar timer={this.state.timer}/>
           {messages}
-          <Chatbox disabled={this.props.debate.false} debateId={this.props.debate._id}/>
+          <Chatbox debateId={this.props.debate._id}/>
         </div>
       )
     }
@@ -138,7 +138,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     onSetDebate: (debate) => dispatch({ type: 'SET_DEBATE', debate }),
-    onSetIsLoading: (isLoading) => dispatch({ type: 'SET_IS_LOADING', isLoading })
+    onSetIsLoading: (isLoading) => dispatch({ type: 'SET_IS_LOADING', isLoading }),
+    onSetWebSocket: (webSocket) => dispatch({ type: 'SET_WEBSOCKET', webSocket })
   };
 };
 

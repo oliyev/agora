@@ -57,6 +57,7 @@ io.on('connection', (socket) => {
   console.log('client connected!');
 
   socket.on('gotDebateId', (data) => gotDebateIdHandler(socket, data)); // is it initiated? is the user a debater? for what stance?
+  socket.on('amsg', (data) => console.log('hey it works')); // is it initiated? is the user a debater? for what stance?
 
   //socket.on('initDebate', (data) => {});
   socket.on('startTimer', (data) => {
