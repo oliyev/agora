@@ -42,16 +42,12 @@ class ListItem extends Component {
             <div className="well well-sm">
                 <div className="row itemRow">
                     <div className="col-xs-3 col-md-3 text-center">
-                        <img src="http://bootsnipp.com/apple-touch-icon-114x114-precomposed.png" alt="bootsnipp"
-                            className="img-rounded img-responsive" />
+                        <img src={this.props.image} alt="Debate Topic"
+                            className="img-rounded img-responsive smallImgStyle" />
                     </div>
                     <div className="col-xs-9 col-md-9 section-box">
-                        <h2>
-                            Bootsnipp <a href="http://bootsnipp.com/" target="_blank"><span className="glyphicon glyphicon-new-window">
-                            </span></a>
-                        </h2>
-                        <p>
-                            Design elements, playground and code snippets for Bootstrap HTML/CSS/JS framework</p>
+                        <h2>{this.props.topic}</h2>
+                        <p>{this.props.description}</p>
                         <hr />
                         <div className="row rating-desc">
                             <div className="col-md-12">

@@ -20,15 +20,14 @@ class Categories extends Component{
   render(){
     console.log("Rendering....")
     let section = null;
-    console.log
 
     if (this.state.dataset.length != 0){
       section = <section className="p-0" id="Categories">
         <div className="container-fluid p-0">
           <div className="row no-gutters popup-gallery">
             <div className="col-lg-4 col-sm-6">
-              <a className="portfolio-box" href={this.state.dataset[0].imageURL}>
-                <img className="img-fluid" src={this.state.dataset[0].imageURL} alt=""/>
+              <a className="portfolio-box aStyle" href={this.state.dataset[0].imageURL}>
+                <img className="img-fluid imgStyle" src={this.state.dataset[0].imageURL} alt=""/>
                 <div className="portfolio-box-caption">
                   <div className="portfolio-box-caption-content">
                     <div className="project-category text-faded">
@@ -42,75 +41,75 @@ class Categories extends Component{
               </a>
             </div>
             <div className="col-lg-4 col-sm-6">
-              <a className="portfolio-box" href="images/portfolio/fullsize/2.jpg">
-                <img className="img-fluid" src="images/portfolio/thumbnails/2.jpg" alt=""/>
+              <a className="portfolio-box aStyle" href={this.state.dataset[1].imageURL}>
+                <img className="img-fluid imgStyle" src={this.state.dataset[1].imageURL} alt=""/>
                 <div className="portfolio-box-caption">
                   <div className="portfolio-box-caption-content">
                     <div className="project-category text-faded">
-                      Category
+                      {this.state.dataset[1].topic}
                     </div>
                     <div className="project-name">
-                      Project Name
+                      {this.state.dataset[1].description} Name
                     </div>
                   </div>
                 </div>
               </a>
             </div>
             <div className="col-lg-4 col-sm-6">
-              <a className="portfolio-box" href="images/portfolio/fullsize/3.jpg">
-                <img className="img-fluid" src="images/portfolio/thumbnails/3.jpg" alt=""/>
+              <a className="portfolio-box aStyle" href={this.state.dataset[2].imageURL}>
+                <img className="img-fluid imgStyle" src={this.state.dataset[2].imageURL} alt=""/>
                 <div className="portfolio-box-caption">
                   <div className="portfolio-box-caption-content">
                     <div className="project-category text-faded">
-                      Category
+                      {this.state.dataset[2].topic}
                     </div>
                     <div className="project-name">
-                      Project Name
+                      {this.state.dataset[2].description}
                     </div>
                   </div>
                 </div>
               </a>
             </div>
             <div className="col-lg-4 col-sm-6">
-              <a className="portfolio-box" href="images/portfolio/fullsize/4.jpg">
-                <img className="img-fluid" src="images/portfolio/thumbnails/4.jpg" alt=""/>
+              <a className="portfolio-box aStyle" href={this.state.dataset[3].imageURL}>
+                <img className="img-fluid imgStyle" src={this.state.dataset[3].imageURL} alt=""/>
                 <div className="portfolio-box-caption">
                   <div className="portfolio-box-caption-content">
                     <div className="project-category text-faded">
-                      Category
+                      {this.state.dataset[3].topic}
                     </div>
                     <div className="project-name">
-                      Project Name
+                      {this.state.dataset[3].description}
                     </div>
                   </div>
                 </div>
               </a>
             </div>
             <div className="col-lg-4 col-sm-6">
-              <a className="portfolio-box" href="images/portfolio/fullsize/5.jpg">
-                <img className="img-fluid" src="images/portfolio/thumbnails/5.jpg" alt=""/>
+              <a className="portfolio-box aStyle" href={this.state.dataset[4].imageURL}>
+                <img className="img-fluid imgStyle" src={this.state.dataset[4].imageURL} alt=""/>
                 <div className="portfolio-box-caption">
                   <div className="portfolio-box-caption-content">
                     <div className="project-category text-faded">
-                      Category
+                      {this.state.dataset[4].topic}
                     </div>
                     <div className="project-name">
-                      Project Name
+                      {this.state.dataset[4].description}
                     </div>
                   </div>
                 </div>
               </a>
             </div>
             <div className="col-lg-4 col-sm-6">
-              <a className="portfolio-box" href="images/portfolio/fullsize/6.jpg">
-                <img className="img-fluid" src="images/portfolio/thumbnails/6.jpg" alt=""/>
+              <a className="portfolio-box aStyle" href={this.state.dataset[5].imageURL}>
+                <img className="img-fluid imgStyle" src={this.state.dataset[5].imageURL} alt=""/>
                 <div className="portfolio-box-caption">
                   <div className="portfolio-box-caption-content">
                     <div className="project-category text-faded">
-                      Category
+                      {this.state.dataset[5].topic}
                     </div>
                     <div className="project-name">
-                      Project Name
+                      {this.state.dataset[5].description}
                     </div>
                   </div>
                 </div>

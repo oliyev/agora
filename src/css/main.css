@@ -339,6 +339,16 @@ body{
   transition: all 300ms linear;
 }
 
+.imgStyle{
+  height:70vh !important;
+	object-fit: cover;
+}
+
+.aStyle{
+  height:100%;
+  width:100%;
+}
+
 /*clearfix hack!*/
 .row:after{
   content:"";
