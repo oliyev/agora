@@ -6,6 +6,7 @@ import Homepage from './Homepage'
 import Chatroom from './Chatroom'
 import Login from '../components/login/Login'
 import Register from '../components/register/Register'
+import Categories from '../components/other/Categories'
 
 import '../css/App.css';
 
@@ -141,7 +142,6 @@ class Main extends Component {
 
   //Handles whether or not the user clicks outside of the login modal
   outsideClickHandler = (e) => {
-
     if(e.target == document.getElementsByClassName('greyback')[0]){
       this.setState({displayLogin : false, displayRegister:false})
     }
@@ -179,7 +179,7 @@ class Main extends Component {
           self.loginClickHandler()
           //Change the nav menu
           let titles = ["Home", "Debate", "Friends", "Resources", "Wiki"]
-          let links = ["/", "/debate", '/friends', '/resourses', 'wiki']
+          let links = ["/", "/categories", '/friends', '/resourses', 'wiki']
           self.handleMenuChange(titles, links)
         }
         self.turnOffProgressBar();
@@ -230,7 +230,7 @@ class Main extends Component {
           self.setState({displayRegister:false, user:response.data, progressBar:false})
           //Change the nav menu
           let titles = ["Home", "Debate", "Friends", "Resources", "Wiki"]
-          let links = ["/", "/debate", '/friends', '/resourses', '/wiki']
+          let links = ["/", "/categories", '/friends', '/resourses', '/wiki']
           self.handleMenuChange(titles, links)
         }
     })
@@ -243,18 +243,18 @@ class Main extends Component {
   }
 
   handleMenuChange = (titles, links) => {
-    console.loog
+
     this.setState({
       navItem1 : titles[0],
       navItem2 : titles[1],
       navItem3 : titles[2],
       navItem4 : titles[3],
       navItem5 : titles[4],
-      navLins1 : links[0],
-      navLins2 : links[1],
-      navLins3 : links[2],
-      navLins4 : links[3],
-      navLins5 : links[4],
+      navLink1 : links[0],
+      navLink2 : links[1],
+      navLink3 : links[2],
+      navLink4 : links[3],
+      navLink5 : links[4],
     })
   }
 
@@ -492,6 +492,7 @@ class Main extends Component {
             <Homepage />
           </div> }/>
         <Route path="/debate" render={() => <Chatroom /> }/>
+        <Route path="/categories" render={() => <Categories /> }/>
       </div>
   );}
 }
