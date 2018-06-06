@@ -14,6 +14,7 @@ class Chatbox extends Component {
   }
 
   render() {
+
     return (
       <div className="input-group mb-1">
         <input onKeyPress={ (ev) => { if (ev.charCode == 13) this.send(this.props.debateId); } } id="msg2send" type="text" className="form-control shadow-sm" placeholder="Enter your argument" disabled={this.props.isDisabled}/>
@@ -40,9 +41,11 @@ class Chatbox extends Component {
 }
 
 const mapStateToProps = state => {
+  console.log(state.debate);
   return {
+    webSocket: state.webSocket,
     debateId: state.debateId,
-    isDisabled: !(state.debate._currentdebatingStance === state.user.stance)
+    isDisabled: !(state.debate._currentDebatingStance === state.user.stance)
   };
 }
 

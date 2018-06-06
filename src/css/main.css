@@ -24,6 +24,49 @@ body{
 	--status-h: 40px;
 }
 
+.show { opacity: 1 !important; }
+.hide { opacity: 0; }
+
+/***** APPLAUSE STYLE *****/
+.clapper:hover > div > div {
+	opacity: 1;
+}
+
+.clap {
+	height: 40px;
+	width: 40px;
+	background-color: var(--sec) ;
+	border-radius: 50%;
+	position: absolute;
+  cursor: pointer;
+	opacity: 0;
+	transition: background-color 0.25s ease, opacity .2s;
+}
+
+.clap:hover {
+	background-color: var(--accent);
+}
+
+.c-for {
+	right: 45px;
+	bottom: -15px;
+}
+
+.c-against {
+	left: 45px;
+	bottom: -15px;
+}
+
+.clapped {
+	background-color: #e8175d !important;
+}
+
+.clap-icon {
+	margin: 10%;
+	width:80%;
+}
+
+/***** CHAT STYLE *****/
 .side-chatmenu {
 	background-color: var(--sec);
 	display: inline-block;
@@ -112,7 +155,7 @@ body{
 	color:rgb(61, 62, 68);
 }
 
-/* chat style */
+/***** CHAT STYLE *****/
 .chat-height {
 	height: var(--side-menu-h);
 	overflow: auto;

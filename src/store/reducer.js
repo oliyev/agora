@@ -1,5 +1,5 @@
 const initialState = {
-  user: { id: 'u-sadlfk', stance: false },
+  user: { id: 'u-sadlfk', stance: true },
   debate: { _id: 'r-409089', _currentDebatingStance: false },
   debateId: 'r-409089',
   webSocket: {},
