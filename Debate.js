@@ -5,7 +5,7 @@ module.exports = class Debate {
     this.startStance = Math.random() >= 0.49;
     this.currentDebatingStance = this.startStance;
     this.timer = null;
-    this.args = [];
+    this.args = []; // msgId, claps, stance
     this.spectators = [];
     this.setUserStance(user);
   }
@@ -30,6 +30,9 @@ module.exports = class Debate {
 
   get timer() { return this._timer; }
   set timer(timer) { this._timer = timer; }
+
+  get args() { return this._args; }
+  set args(args) { this._args = args; }
 
   setUserStance(user) {
     if (this._debaterFor && this._debaterAgainst){

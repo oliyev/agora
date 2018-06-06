@@ -30,7 +30,7 @@ class Chatbox extends Component {
     let input = document.querySelector('#msg2send')
     let msg = input.value
     if (input.value){
-      api.post('/msg', {msg: msg, debateId: debateId})
+      api.post('/msg', {msg: msg, debateId: debateId, user: this.props.user})
       .then((response) => console.log('post msg response'))
       .catch((err) => console.log(err))
     }
@@ -41,11 +41,12 @@ class Chatbox extends Component {
 }
 
 const mapStateToProps = state => {
-  console.log(state.debate);
+  console.log(state.user);
   return {
     webSocket: state.webSocket,
     debateId: state.debateId,
-    isDisabled: !(state.debate._currentDebatingStance === state.user.stance)
+    isDisabled: !(state.debate._currentDebatingStance === state.user.stance),
+    user: state.user
   };
 }
 

@@ -48,13 +48,13 @@ body{
 }
 
 .c-for {
-	right: 45px;
-	bottom: -15px;
+	right: 15px;
+	bottom: -20px;
 }
 
 .c-against {
-	left: 45px;
-	bottom: -15px;
+	left: 15px;
+	bottom: -20px;
 }
 
 .clapped {
@@ -74,6 +74,7 @@ body{
 	height: 100%;
 	margin: 0;
 	color: white;
+	transition: width 0.25s ease;
 }
 
 .navigation {

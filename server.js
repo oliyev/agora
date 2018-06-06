@@ -22,11 +22,18 @@ app.use(function(req, res, next) {
 });
 
 ///////////////////// HTTP REQUEST HANDLERS
-app.post('/msg', function (req, res, next) {x
+app.post('/msg', function (req, res, next) {
   let msg = req.body.msg;
   let debateId = req.body.debateId;
+  let arg = {
+    id: debateId + req.body.user.id + Date.now(),
+    stance: req.body.user.stance,
+    content: msg,
+    clappers: [],
+    claps: 0
+  }
 
-  // Publisher
+/*  // Publisher
   amqplib.then(function(conn) {
     var ok = conn.createChannel();
     ok = ok.then(function(ch) {
@@ -35,14 +42,18 @@ app.post('/msg', function (req, res, next) {x
       ch.sendToQueue(debateId, new Buffer(msg));
     });
     return ok;
-  }).then(null, console.warn);
+  }).then(null, console.warn);*/
 
 
   let debate = debates.find((x) => { return x.id === debateId });
 
   if (debate){
     if (debate.args.length === 0)
-    debate.start(null); // gotta have a callback for this.
+      debate.start(null); // gotta have a callback for this.
+
+    debate.args.push(arg);
+    debate._currentDebatingStance = !debate._currentDebatingStance;
+    io.to(debateId).emit('message', debate);
   }
   else {
     console.log('no debate.');
@@ -64,6 +75,8 @@ io.on('connection', (socket) => {
     console.log('start a timer');
   });
 
+  socket.on('clapped', (data) => onMsgClappedHandler(data)); // userId, msgId, debateId, value: true || false
+
 
 })
 
@@ -79,7 +92,7 @@ gotDebateIdHandler = (socket, data) => {
 
   socket.join(id);
 
-  let debate = debates.find((x) => { return x.id === id });
+  let debate = debates.find((x) => { return x.id === id; });
   if (debate) {
     console.log('debate found, id: ' + debate.id);
     debate.setUserStance(data.user);
@@ -88,7 +101,7 @@ gotDebateIdHandler = (socket, data) => {
   else
     createDebateRoom(id, data.user);
 
-  // Consumer
+/*  // Consumer
   amqplib.then(function(conn) {
     let ok = conn.createChannel();
     ok = ok.then(function(ch) {
@@ -96,13 +109,14 @@ gotDebateIdHandler = (socket, data) => {
       ch.consume(id, function(msg) {
         if (msg !== null && msg.content.toString() !== '') {
           console.log('consume msg ' + msg.content.toString());
-          io.to(id).emit('message', msg.content.toString());
+          io.to(id).emit('message', {msg: msg.content.toString(), debate: debate});
+          // io.to(id).emit('message', msg.content.toString()); // amqp kinda useless now...
           ch.ack(msg);
         }
       });
     });
     return ok;
-  }).then(null, console.warn);
+  }).then(null, console.warn);*/
 }
 
 createDebateRoom = (debateId, user) => {
@@ -110,6 +124,17 @@ createDebateRoom = (debateId, user) => {
   debates.push(debate);
   console.log('debate created, id: ' + debateId);
   io.in(debateId).emit('debateCreated', debate);
+}
+
+onMsgClappedHandler = (data) => { // userId, msgId, debateId, value: true || false
+  let debate = debates.find((x) => { return x.id === data.debateId });
+  let arg = debate._args.find((x) => { return x.id === data.msgId });
+  let clapper = arg.clappers.find((x) => { return x.id === data.userId });
+
+  if (clapper) {
+    // TODO: 
+  }
+
 }
 
 ///////////////////// WORKER METHODS

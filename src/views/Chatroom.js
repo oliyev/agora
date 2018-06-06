@@ -24,6 +24,7 @@ class Chatroom extends Component {
       stance: FOR
     },
     messages: [],
+    args: [],
     debate: {},
     topic: 'Kinder Morgan pipeline',
     stance: FOR,
@@ -35,9 +36,12 @@ class Chatroom extends Component {
   componentWillMount () {
     let ws = io.connect('http://127.0.0.1:4000/');
     ws.on('connect', (data) => this.onConnect(data));
-    ws.on('message', (data) => this.addMessage(data));
+    ws.on('message', (debate) => this.addMessage(debate));
     ws.on('debateCreated', (debate) => this.initChatroom(debate));
     ws.on('chatroomReady', (data) => this.chatroomReadyHandler(data));
+
+    ws.on('clapCounter', (arg) => this.addClap(arg));
+
     ws.emit('gotDebateId', {debateId: this.props.debate._id, user: this.props.user});
     this.props.onSetWebSocket(ws);
 
@@ -48,7 +52,7 @@ class Chatroom extends Component {
 
   render() {
 
-    let loading, messages, chatroom;
+    let loading, messages, chatroom, sideMenu;
 
     if (this.props.isLoading) {
         loading = <LoadingDebate />
@@ -57,15 +61,21 @@ class Chatroom extends Component {
       messages = (
         <div id="chatoutput" className="shadow-sm p-3 mb-3 rounded border chat-height">
           <Message msg={this.state.introMsg} stance="neutral"/>
-          {this.state.messages.map((message, index) => {
-            return <Message key={index} msg={message.msg} stance={message.stance}/>
+          {this.props.debate._args.map((arg, index) => {
+            return <Message key={arg.id} id={arg.id} msg={arg.content} stance={arg.stance}/>
           })}
+        </div>
+      )
+
+      sideMenu = (
+        <div className="col-3 side-chatmenu position-relative">
+          <span className="glyphicon glyphicon-chevron-left position-absolute "></span>
         </div>
       )
 
       chatroom = (
         <div className="col-9 chat-max mx-auto mt-10 shadow-md p-3 mb-1">
-          <ChatStatusBar timer={this.state.timer}/>
+          <ChatStatusBar timer={this.props.timer}/>
           {messages}
           <Chatbox debateId={this.props.debate._id}/>
         </div>
@@ -75,8 +85,9 @@ class Chatroom extends Component {
     return (
       <div className="chat-container row">
         {loading}
-        <div className="col-3 side-chatmenu">{'fancy ass menu'}</div>
+        {sideMenu}
         {chatroom}
+        <button onClick={ this.swapStance }>{'SWAP STANCE'}</button>
       </div>
     );
   }
@@ -87,10 +98,29 @@ class Chatroom extends Component {
     console.log('on connect');
   }
 
-  addMessage (data) {
+  /*arg = {
+    id: debateId + req.body.user.id + Date.now(),
+    stance: req.body.user.stance,
+    content: msg,
+    clappers: [],
+    claps: 0
+  }*/
+
+  addMessage (debate) {
+    console.log('add message');
+    this.props.onSetDebate(debate);
+
+    let chat = document.querySelector('#chatoutput');
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+/*  addMessage (data) {
     console.log('add message');
     let messages = [...this.state.messages];
-    let message = {msg:data, stance:this.state.stance}
+    let message = {msg:data.msg, stance:this.state.stance}
+
+    let args = data.debate.args;
+    console.log(args);
     messages.push(message);
     this.setState({
       messages:messages,
@@ -99,7 +129,7 @@ class Chatroom extends Component {
 
     let chat = document.querySelector('#chatoutput');
     chat.scrollTop = chat.scrollHeight;
-  }
+  }*/
 
   initChatroom (debate) {
     console.log('initiating debate room (debateCreated)');
@@ -121,6 +151,13 @@ class Chatroom extends Component {
     this.setState({timer: data});
   }
 
+  swapStance = () => {
+    let updatedUser = {...this.props.user};
+    updatedUser.id = 'nu-u1337';
+    updatedUser.stance = !this.props.user.stance;
+    this.props.onSetUser(updatedUser);
+  }
+
 }
 
 // accessible by this.props.[property] in the render function
@@ -139,7 +176,8 @@ const mapDispatchToProps = dispatch => {
   return {
     onSetDebate: (debate) => dispatch({ type: 'SET_DEBATE', debate }),
     onSetIsLoading: (isLoading) => dispatch({ type: 'SET_IS_LOADING', isLoading }),
-    onSetWebSocket: (webSocket) => dispatch({ type: 'SET_WEBSOCKET', webSocket })
+    onSetWebSocket: (webSocket) => dispatch({ type: 'SET_WEBSOCKET', webSocket }),
+    onSetUser: (user) => dispatch({ type: 'SET_USER', user })
   };
 };
 
