@@ -22,7 +22,7 @@ import '../../node_modules/jquery/dist/jquery.js';
 import '../../node_modules/jquery.easing/jquery.easing.js'
 //import '../js/creative.js'
 
-import { Route } from 'react-router-dom'
+import { Route , withRouter } from 'react-router-dom'
 
 import axios from 'axios';
 
@@ -91,6 +91,15 @@ class Main extends Component {
 
     })(jQuery); // End of use strict
 
+    //determine if user has already logged in and what kind of menu to display
+    if (sessionStorage.getItem("user") != null){
+      console.log("User stored in session");
+      this.handleMenuChange(true);
+      let temp = {...this.state.user};
+      temp.id = sessionStorage.getItem("user");
+      this.setState({user: temp})
+    }
+
   }
 
 
@@ -128,16 +137,22 @@ class Main extends Component {
 
   //To display login modal, or not, that is the question...
   loginClickHandler = () => {
-    const doesShow = this.state.displayLogin;
-    this.setState({displayLogin : !doesShow, displayRegister : false})
-    console.log("Show: " + doesShow)
+    if (this.state.user == null){
+      const doesShow = this.state.displayLogin;
+      this.setState({displayLogin : true, displayRegister : false})
+    }
+    else{
+      this.setState({user:null})
+      this.handleMenuChange(false);
+      sessionStorage.setItem("user", null)
+      this.props.history.push('/')
+    }
   }
 
   //To display login modal, or not, that is the question...
   registerDisplayHandler = () => {
     const doesShow = this.state.displayRegister;
     this.setState({displayRegister : !doesShow, displayLogin: false})
-    console.log("Show: " + doesShow)
   }
 
   //Handles whether or not the user clicks outside of the login modal
@@ -174,13 +189,10 @@ class Main extends Component {
           self.setState({loginIncorrect : true});
         }else{
           //Login Successful
-          self.state.user = response.data
-          self.setState({loginIncorrect : false});
-          self.loginClickHandler()
+          self.setState({loginIncorrect : false, user : response.data, displayLogin:false});
+          sessionStorage.setItem("user", self.state.user.id)
           //Change the nav menu
-          let titles = ["Home", "Debate", "Friends", "Resources", "Wiki"]
-          let links = ["/", "/categories", '/friends', '/resourses', 'wiki']
-          self.handleMenuChange(titles, links)
+          self.handleMenuChange(true)
         }
         self.turnOffProgressBar();
         //console.log(self.state.user)
@@ -228,10 +240,9 @@ class Main extends Component {
           console.log("NEW USER CREATED!!")
           self.resetErrors()
           self.setState({displayRegister:false, user:response.data, progressBar:false})
+          sessionStorage.setItem("user", self.state.user.id)
           //Change the nav menu
-          let titles = ["Home", "Debate", "Friends", "Resources", "Wiki"]
-          let links = ["/", "/categories", '/friends', '/resourses', '/wiki']
-          self.handleMenuChange(titles, links)
+          self.handleMenuChange(true)
         }
     })
     .catch(function (response) {
@@ -242,7 +253,17 @@ class Main extends Component {
 
   }
 
-  handleMenuChange = (titles, links) => {
+  handleMenuChange = (loggedIn) => {
+
+    let titles, links;
+
+    if (loggedIn){
+      titles = ["Home", "Debate", "Wiki", "Resources", "Logout"]
+      links = ["/", "/categories", '/wiki', '/resourses', null]
+    }else{
+      titles = ["About", "Features", "Categories", "Contact", "Login / Register"]
+      links = ["/", "/#features", '/#categories', '/#contact', null]
+    }
 
     this.setState({
       navItem1 : titles[0],
@@ -497,4 +518,4 @@ class Main extends Component {
   );}
 }
 
-export default Main;
+export default withRouter(Main);
