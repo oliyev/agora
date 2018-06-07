@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import '../../style/App.css';
-import '../../style/main.css';
+import '../../css/App.css';
+import '../../css/main.css';
 
-const header = (props) => {
+export default (props) => {
   return (
     <div>
       <header className="App-header">
@@ -10,6 +10,4 @@ const header = (props) => {
       </header>
     </div>
   );
-}
-
-export default header;
+};
