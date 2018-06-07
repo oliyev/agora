@@ -9,6 +9,8 @@ const cluster = require('cluster');
 const child_process = require('child_process')
 const Debate = require('./Debate');
 
+const PORT = process.env.PORT || 4000;
+
 let q = 'r-409089';
 let debates = [];
 
@@ -79,7 +81,7 @@ io.on('connection', (socket) => {
 
 })
 
-server.listen(process.env.PORT || 4000, () => console.log('Listening on port 4000!'))
+server.listen(PORT, () => console.log('Listening on port 4000!'));
 
 ///////////////////// DEBATE METHODS
 debateTimerHandler = (debate) => {
