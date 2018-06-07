@@ -28,7 +28,8 @@
     "redux": "^4.0.0",
     "scrollreveal": "3.4.0",
     "socket.io": "^2.1.1",
-    "sockjs": "^0.3.19"
+    "sockjs": "^0.3.19",
+    "twitter": "^1.7.1"
   },
   "scripts": {
     "start": "react-scripts start",
