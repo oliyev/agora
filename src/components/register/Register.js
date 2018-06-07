@@ -17,11 +17,6 @@ const register = (props) => {
                 <input onChange={props.handleChange} value={props.passwordConfirm} name="passwordConfirm" type="password" id="registerPassword2" className={props.validationFailed3} placeholder="Confirm Password" required/>
                 {props.error4}
                 <input onChange={props.handleChange} value={props.email} name="email" type="text" id="registerEmail" className={props.validationFailed4} placeholder="Email address" required/>
-                <div id="remember" className="checkbox">
-                    <label>
-                        <input type="checkbox" value="remember-me"/> Confirm you are not a robot
-                    </label>
-                </div>
                 {props.regButton}
               </div>
             <a className="forgot-password" onClick={props.loginHandler}>

@@ -92,14 +92,14 @@ class Main extends Component {
     })(jQuery); // End of use strict
 
     //determine if user has already logged in and what kind of menu to display
-    if (sessionStorage.getItem("user") != null){
+    if (sessionStorage.getItem("user") != "null"){
       console.log("User stored in session");
       this.handleMenuChange(true);
       let temp = {...this.state.user};
       temp.id = sessionStorage.getItem("user");
+      console.log(temp)
       this.setState({user: temp})
     }
-
   }
 
 
@@ -123,17 +123,24 @@ class Main extends Component {
     navItem3 : "Categories",
     navItem4 : "Contact",
     navItem5 : "Login / Register",
-    navLink1 : "/#about",
-    navLink2 : "/#features",
-    navLink3 : "/#categories",
-    navLink4 : "/#contact",
-    navLink5 : null,
+    navLink1 : "/",
+    navLink2 : "/",
+    navLink3 : "/",
+    navLink4 : "/",
+    navHash1 : "#about",
+    navHash2 : "#features",
+    navHash3 : "#categories",
+    navHash4 : "#contact",
     passwordMatch:"",
     passwordLength:"",
     usernameLength:"",
     validEmail:"",
     regDisabled:true
   }
+
+  //Nav Link Handler
+
+
 
   //To display login modal, or not, that is the question...
   loginClickHandler = () => {
@@ -145,6 +152,7 @@ class Main extends Component {
       this.setState({user:null})
       this.handleMenuChange(false);
       sessionStorage.setItem("user", null)
+      sessionStorage.setItem("username", null)
       this.props.history.push('/')
     }
   }
@@ -191,6 +199,7 @@ class Main extends Component {
           //Login Successful
           self.setState({loginIncorrect : false, user : response.data, displayLogin:false});
           sessionStorage.setItem("user", self.state.user.id)
+          sessionStorage.setItem("username", self.state.user.username)
           //Change the nav menu
           self.handleMenuChange(true)
         }
@@ -241,6 +250,7 @@ class Main extends Component {
           self.resetErrors()
           self.setState({displayRegister:false, user:response.data, progressBar:false})
           sessionStorage.setItem("user", self.state.user.id)
+          sessionStorage.setItem("username", self.state.user.username)
           //Change the nav menu
           self.handleMenuChange(true)
         }
@@ -255,14 +265,16 @@ class Main extends Component {
 
   handleMenuChange = (loggedIn) => {
 
-    let titles, links;
+    let titles, links, hash;
 
     if (loggedIn){
       titles = ["Home", "Debate", "Wiki", "Resources", "Logout"]
       links = ["/", "/categories", '/wiki', '/resourses', null]
+      hash = ["#page-top", "#page-top", "#page-top", "#page-top"]
     }else{
       titles = ["About", "Features", "Categories", "Contact", "Login / Register"]
       links = ["/", "/#features", '/#categories', '/#contact', null]
+      hash = ["#about", "#features", "#categories", "#contact"]
     }
 
     this.setState({
@@ -276,6 +288,10 @@ class Main extends Component {
       navLink3 : links[2],
       navLink4 : links[3],
       navLink5 : links[4],
+      navHash1 : hash[0],
+      navHash2 : hash[1],
+      navHash3 : hash[2],
+      navHash4 : hash[3],
     })
   }
 
@@ -504,6 +520,10 @@ class Main extends Component {
             navLink3={this.state.navLink3}
             navLink4={this.state.navLink4}
             navLink5={this.state.navLink5}
+            navHash1={this.state.navHash1}
+            navHash2={this.state.navHash2}
+            navHash3={this.state.navHash3}
+            navHash4={this.state.navHash4}
           />
         {login}
         {register}

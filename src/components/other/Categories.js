@@ -25,7 +25,7 @@ class Categories extends Component {
     let listItems = null
 
     if (this.state.dataset.length > 0){
-      listItems = this.state.dataset.map((item) => <ListItem  image={item.imageURL} topic={item.topic} description={item.description} /> )
+      listItems = this.state.dataset.map((item) => <ListItem  image={item.imageURL} topic={item.topic} description={item.description} id={item.id}/> )
       console.log(listItems)
     }
 
