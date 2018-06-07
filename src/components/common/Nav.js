@@ -1,11 +1,22 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import '../../css/main.css';
+import {withRouter, Link } from 'react-router-dom'
 
+class Nav extends Component {
 
+  navMenuClickHandler = (link) => {
+    console.log(link)
+    this.props.history.push(link)
+    if(link.includes("#")){
+      link = link.replace("/#", "");
+      console.log("Link:   " + link)
+    }
+  }
 
-const nav = (props) => {
-  return (
-    <nav className="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  render(props) {
+    console.log(this.props)
+
+    return (<nav className="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
       <div className="container">
         <a className="navbar-brand js-scroll-trigger" href="#page-top"><img className="logo" src="images/agora.png" alt="Agora Logo"/></a>
         <button className="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -14,25 +25,38 @@ const nav = (props) => {
         <div className="collapse navbar-collapse" id="navbarResponsive">
           <ul className="navbar-nav ml-auto">
             <li className="nav-item">
-              <a className="nav-link js-scroll-trigger" href={props.navLink1}>{props.title1}</a>
+              <Link className="nav-link js-scroll-trigger" to={{
+                pathname: this.props.navLink1,
+                hash: this.props.navHash1
+              }}>{this.props.title1}</Link>
             </li>
             <li className="nav-item">
-              <a className="nav-link js-scroll-trigger" href={props.navLink2}>{props.title2}</a>
+              <Link className="nav-link js-scroll-trigger" to={{
+                pathname: this.props.navLink2,
+                hash: this.props.navHash2,
+              }}>{this.props.title2}</Link>
             </li>
             <li className="nav-item">
-              <a className="nav-link js-scroll-trigger" href={props.navLink3}>{props.title3}</a>
+              <Link className="nav-link js-scroll-trigger" to={{
+                pathname: this.props.navLink3,
+                hash: this.props.navHash3,
+              }}>{this.props.title3}</Link>
             </li>
             <li className="nav-item">
-              <a className="nav-link js-scroll-trigger" href={props.navLink4}>{props.title4}</a>
+              <Link className="nav-link js-scroll-trigger" to={{
+                pathname: this.props.navLink4,
+                hash: this.props.navHash4,
+              }}>{this.props.title4}</Link>
             </li>
             <li className="nav-item">
-              <a className="nav-link js-scroll-trigger" href={props.navLink5} onClick={props.loginHandler}>{props.title5}</a>
+              <a className="nav-link js-scroll-trigger"
+                onClick={this.props.loginHandler}>{this.props.title5}</a>
             </li>
           </ul>
         </div>
       </div>
-    </nav>
-  );
+    </nav>);
+  }
 }
 
-export default nav;
+export default withRouter(Nav);

@@ -13,11 +13,6 @@ const login = (props) => {
                 {props.incorrect}
                 <input onChange={props.handleChange} value={props.username} name="username" username={props.username} password={props.password} type="email" id="inputEmail" className="form-control" placeholder="Username" required autoFocus/>
                 <input onChange={props.handleChange} value={props.password} name="password" type="password" id="inputPassword" className="form-control" placeholder="Password" required/>
-                <div id="remember" className="checkbox">
-                    <label>
-                        <input type="checkbox" value="remember-me"/> Remember me
-                    </label>
-                </div>
                 <button onClick={props.login} className="btn2 btn-lg btn-primary btn-block btn-signin">Login</button>
               </div>
             <a onClick={props.displayReg}  className="forgot-password">

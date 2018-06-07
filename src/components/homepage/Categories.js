@@ -22,7 +22,8 @@ class Categories extends Component{
     let section = null;
 
     if (this.state.dataset.length != 0){
-      section = <section className="p-0" id="Categories">
+      section =
+      <section className="p-0" id="categories">
         <div className="container-fluid p-0">
           <div className="row no-gutters popup-gallery">
             <div className="col-lg-4 col-sm-6">
@@ -125,8 +126,8 @@ class Categories extends Component{
         {section}
         <section className="bg-dark text-white">
           <div className="container text-center">
-            <h2 className="mb-4">Free Download at Start Bootstrap!</h2>
-            <a className="btn btn-light btn-xl sr-button" href="http://startbootstrap.com/template-overviews/creative/">Download Now!</a>
+            <h2 className="mb-4">Want to see more topics?</h2>
+            <a className="btn btn-light btn-xl sr-button" href="http://startbootstrap.com/template-overviews/creative/">Click here to learn how!</a>
           </div>
         </section>
       </div>

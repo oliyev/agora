@@ -4,6 +4,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import jQuery from 'jquery';
 import icons from 'glyphicons'
 
+import { withRouter } from 'react-router-dom'
+
 class ListItem extends Component {
 
   state = {
@@ -36,6 +38,14 @@ class ListItem extends Component {
 
   }
 
+  onClickDebateHandler = (stance) => {
+    sessionStorage.setItem("debateId", this.props.id)
+    sessionStorage.setItem("stance", stance)
+    console.log(sessionStorage.getItem("debateId"));
+    console.log(sessionStorage.getItem("stance"));
+    this.props.history.push("/debate")
+  }
+
   render(props) {
     return (
       <div className="col-md-10">
@@ -51,9 +61,9 @@ class ListItem extends Component {
                         <hr />
                         <div className="row rating-desc">
                             <div className="col-md-12">
-                                <span className="glyphicon glyphicon-heart"></span><span className="glyphicon glyphicon-heart">
-                                </span><span className="glyphicon glyphicon-heart">{icons.heart}</span>(36)<span className="separator">|</span>
-                                <span className="glyphicon glyphicon-comment">{icons.whale}</span>(100 Comments)
+                                <button className="btn btn-info sr-button ctButton" onClick={ () => this.onClickDebateHandler(true) } > Debate for this postion! </button>
+                                <button className="btn btn-info sr-button ctButton" onClick={ () => this.onClickDebateHandler(false) } > Debate against this postion</button>
+                                <button className="btn btn-info sr-button ctButton" onClick={ () => this.onClickDebateHandler(null) } > Be a spectator </button>
                             </div>
                         </div>
                     </div>
@@ -64,4 +74,4 @@ class ListItem extends Component {
   }
 }
 
-export default ListItem;
+export default withRouter(ListItem);
