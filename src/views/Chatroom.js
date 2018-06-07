@@ -57,7 +57,7 @@ class Chatroom extends Component {
     console.log(user, debateId, userId, stance);
 
     // let ws = io.connect('http://127.0.0.1:4000/');
-    let ws = io.connect('https://agoraproject.herokuapp.com:4000');
+    let ws = io();
     ws.on('connect', (data) => this.onConnect(debateId, user, topic));
     ws.on('message', (debate) => this.addMessage(debate));
     ws.on('debateCreated', (debate) => this.initChatroom(debate));
