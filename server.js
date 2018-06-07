@@ -25,34 +25,36 @@ app.use(function(req, res, next) {
 app.post('/msg', function (req, res, next) {
   let msg = req.body.msg;
   let debateId = req.body.debateId;
+  let stance = req.body.user.stance;
+  let userId = req.body.user.id;
+
   let arg = {
-    id: debateId + req.body.user.id + Date.now(),
-    stance: req.body.user.stance,
+    id: debateId + userId + Date.now(),
+    stance: stance,
     content: msg,
     clappers: [],
     claps: 0
   }
-
-/*  // Publisher
-  amqplib.then(function(conn) {
-    var ok = conn.createChannel();
-    ok = ok.then(function(ch) {
-      ch.assertExchange('test','fanout', {durable: false}, (err, ok) => { console.log(err);});
-      ch.assertQueue(debateId);
-      ch.sendToQueue(debateId, new Buffer(msg));
-    });
-    return ok;
-  }).then(null, console.warn);*/
-
-
   let debate = debates.find((x) => { return x.id === debateId });
 
   if (debate){
-    if (debate.args.length === 0)
-      debate.start(null); // gotta have a callback for this.
-
-    debate.args.push(arg);
+    // change state of debate
+    debate._args.push(arg);
     debate._currentDebatingStance = !debate._currentDebatingStance;
+    debate._round += 1;
+
+    if (!debate._hasStarted){
+      debate._hasStarted = true;
+      io.to(debateId).emit('debateStarted', debate);
+      debate.toggleTimer(io); // // TODO: A:SLFKJAL:SFKJ IF TIMER HITS 0, STOP TIMER, SEND NUDES TO CLIENT AND BINGO
+    }
+
+    if (!debate._debaterFor && stance)
+      debate._debaterFor = userId;
+
+    if (!debate._debaterAgainst && !stance)
+      debate._debaterAgainst = userId;
+
     io.to(debateId).emit('message', debate);
   }
   else {
@@ -68,9 +70,6 @@ io.on('connection', (socket) => {
   console.log('client connected!');
 
   socket.on('gotDebateId', (data) => gotDebateIdHandler(socket, data)); // is it initiated? is the user a debater? for what stance?
-  socket.on('amsg', (data) => console.log('hey it works')); // is it initiated? is the user a debater? for what stance?
-
-  //socket.on('initDebate', (data) => {});
   socket.on('startTimer', (data) => {
     console.log('start a timer');
   });
@@ -83,6 +82,34 @@ io.on('connection', (socket) => {
 server.listen(process.env.PORT || 4000, () => console.log('Listening on port 4000!'))
 
 ///////////////////// DEBATE METHODS
+debateTimerHandler = (debate) => {
+
+  if (debate._roundTime > 0 && debate._debateTime > 0){
+    debate._roundTime -= 1;
+    debate._debateTime -= 1;
+    try { io.to(debateId).emit('timerChange', debate); }
+    catch (e) { console.log('TIMER CHANGE \n' +e); }
+  }
+  else if (debate._roundTime === 0 && debate._debateTime > 0) {
+    debate._roundTime = 60;
+    debate._currentDebatingStance = !debate._currentDebatingStance;
+    try { io.to(debateId).emit('endOfRound', debate); }
+    catch (e) { console.log('END OF ROUND \n' +e); }
+  }
+  else if (debate._debateTime === 0) {
+    console.log('end of debate');
+    debate._hasEnded = true;
+    debate._roundTime = 0;
+    debate.toggleTimer(null);
+    debate.calcStats();
+    try { io.to(debateId).emit('endOfDebate', debate); }
+    catch (e) { console.log('END OF DEBATE \n' +e); }
+  }
+  else {
+    console.log('still going');
+  }
+}
+
 gotDebateIdHandler = (socket, data) => {
   let id = data.debateId;
   console.log('debate id: ' + id);
@@ -100,23 +127,6 @@ gotDebateIdHandler = (socket, data) => {
   }
   else
     createDebateRoom(id, data.user);
-
-/*  // Consumer
-  amqplib.then(function(conn) {
-    let ok = conn.createChannel();
-    ok = ok.then(function(ch) {
-      ch.assertQueue(id);
-      ch.consume(id, function(msg) {
-        if (msg !== null && msg.content.toString() !== '') {
-          console.log('consume msg ' + msg.content.toString());
-          io.to(id).emit('message', {msg: msg.content.toString(), debate: debate});
-          // io.to(id).emit('message', msg.content.toString()); // amqp kinda useless now...
-          ch.ack(msg);
-        }
-      });
-    });
-    return ok;
-  }).then(null, console.warn);*/
 }
 
 createDebateRoom = (debateId, user) => {
@@ -127,14 +137,22 @@ createDebateRoom = (debateId, user) => {
 }
 
 onMsgClappedHandler = (data) => { // userId, msgId, debateId, value: true || false
-  let debate = debates.find((x) => { return x.id === data.debateId });
-  let arg = debate._args.find((x) => { return x.id === data.msgId });
-  let clapper = arg.clappers.find((x) => { return x.id === data.userId });
+  let debate = debates.find((x) => { return x.id === data.debateId }) || {};
+  let arg = debate._args.find((x) => { return x.id === data.msgId }) || {};
+  let clapperIndex = arg.clappers.indexOf(data.userId);
 
-  if (clapper) {
-    // TODO: 
+  if (clapperIndex !== -1){
+    arg.clappers.splice(clapperIndex);
+    arg.claps -= 1;
+    console.log(data.userId + ' unclapped ' + data.msgId);
+  }
+  else{
+    arg.clappers.push(data.userId);
+    arg.claps += 1;
+    console.log(data.msgId + ' clapped by user ' +  data.userId);
   }
 
+  io.to(data.debateId).emit('clapped', debate);
 }
 
 ///////////////////// WORKER METHODS
@@ -161,3 +179,33 @@ timerWorkerHandler = (msg) => {
 
   }
 }
+
+// --------- RIP AMQP 2018-2018 (QQ) ------- //
+/*  // Consumer
+  amqplib.then(function(conn) {
+    let ok = conn.createChannel();
+    ok = ok.then(function(ch) {
+      ch.assertQueue(id);
+      ch.consume(id, function(msg) {
+        if (msg !== null && msg.content.toString() !== '') {
+          console.log('consume msg ' + msg.content.toString());
+          io.to(id).emit('message', {msg: msg.content.toString(), debate: debate});
+          // io.to(id).emit('message', msg.content.toString()); // amqp kinda useless now...
+          ch.ack(msg);
+        }
+      });
+    });
+    return ok;
+  }).then(null, console.warn);*/
+
+
+  /*  // Publisher
+    amqplib.then(function(conn) {
+      var ok = conn.createChannel();
+      ok = ok.then(function(ch) {
+        ch.assertExchange('test','fanout', {durable: false}, (err, ok) => { console.log(err);});
+        ch.assertQueue(debateId);
+        ch.sendToQueue(debateId, new Buffer(msg));
+      });
+      return ok;
+    }).then(null, console.warn);*/

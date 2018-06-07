@@ -36,8 +36,6 @@ class Chatbox extends Component {
     }
     input.value = '';
   }
-
-  // keySend = (ev) => { if (ev.charCode == 13) this.send() };
 }
 
 const mapStateToProps = state => {

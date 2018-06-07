@@ -21,10 +21,10 @@ class Message extends Component {
     let clapClassName = `clap ${this.props.stance ? 'c-for' : 'c-against'} position-absolute`;
     let stanceMsg;
 
-    if (this.state.hasClapped)
+    if (this.props.hasClapped)
       clapClassName += ' clapped';
 
-    clapClassName += this.state.showClap || this.state.hasClapped ? ' show' : ' hide';
+    clapClassName += this.props.claps != 0 ? ' show' : ' hide';
 
     if (this.props.stance === 'neutral') {
       return (
@@ -33,6 +33,40 @@ class Message extends Component {
             <span className="align-middle col-12 d-block text-center">{'Welcome to the debate room! Both debaters will take turns to discuss on '}</span>
             <span className="word-emphasis">{this.props.msg.topic}</span>
             <span>{' starting with agruments '}<span className="word-emphasis">{this.props.msg.startStance ? 'for' : 'against'}</span>{' this topic.'}</span>
+          </div>
+        </div>
+      )
+    }
+
+    if (this.props.stance === 'stats' && this.props.stats !== null) {
+      let winner;
+
+      if (this.props.stats.winner !== null){
+        if (this.props.stats.winner){
+          winner = 'Debater for';
+
+        }
+        else {
+          'Debater against';
+        }
+      }
+      else
+        winner = null;
+
+      return (
+        <div className="input-group mb-4 mt-1 col-12">
+          <div className="border msg-cont p-3 neut-state">
+            <span className="align-middle col-12 d-block text-center">{'Debate ended, congratulations to both debaters!'}</span>
+            <span className="word-emphasis">{ winner !== null ? this.props.stats.winner + ' won the audience\'s heart!' : 'A DRAW?! This is a quite polarizing topic!'}</span>
+            <p>{'Statistics FOR: '}</p>
+            <p>{this.props.stats.totalClapsFor + ' claps in total'}</p>
+            <p>{'Most acclaimed argument (' + this.props.stats.mostClapsFor + ' claps): '}</p>
+            <span className="quote">{this.props.stats.mostClappedFor}</span>
+
+            <p>{'Statistics Against: '}</p>
+            <p>{this.props.stats.totalClapsAgainst + ' claps in total'}</p>
+            <p>{'Most acclaimed argument (' + this.props.stats.mostClapsAgainst + ' claps): '}</p>
+            <span className="quote">{this.props.stats.mostClappedAgainst}</span>
           </div>
         </div>
       )
@@ -58,7 +92,7 @@ class Message extends Component {
             <span className="align-middle col-12 d-block text-left">{this.props.msg}</span>
             <div onClick={ () => { this.toggleClap(this.props.id) } } className={clapClassName}>
               <img className="clap-icon" src={clapIcon} />
-              <span className="badge">40</span>
+              { this.props.claps !== 0 ? <span className="badge badge-light">{this.props.claps}</span> : '' }
             </div>
           </div>
           <img className="m-1 msgimg" src={userIcon} alt="userIcon" />

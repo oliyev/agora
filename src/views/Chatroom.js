@@ -39,9 +39,11 @@ class Chatroom extends Component {
     ws.on('message', (debate) => this.addMessage(debate));
     ws.on('debateCreated', (debate) => this.initChatroom(debate));
     ws.on('chatroomReady', (data) => this.chatroomReadyHandler(data));
-
-    ws.on('clapCounter', (arg) => this.addClap(arg));
-
+    ws.on('debateStarted', (data) => this.debateStarted(data));
+    ws.on('endOfRound', (data) => this.endOfRound(data));
+    ws.on('endOfDebate', (data) => this.endOfDebate(data));
+    ws.on('timerChange', (debate) => this.props.onSetDebate(debate));
+    ws.on('clapped', (debate) => this.props.onSetDebate(debate));
     ws.emit('gotDebateId', {debateId: this.props.debate._id, user: this.props.user});
     this.props.onSetWebSocket(ws);
 
@@ -62,7 +64,11 @@ class Chatroom extends Component {
         <div id="chatoutput" className="shadow-sm p-3 mb-3 rounded border chat-height">
           <Message msg={this.state.introMsg} stance="neutral"/>
           {this.props.debate._args.map((arg, index) => {
-            return <Message key={arg.id} id={arg.id} msg={arg.content} stance={arg.stance}/>
+            return <Message key={arg.id} id={arg.id}
+                    claps={arg.claps} msg={arg.content}
+                    hasClapped={ arg.clappers ? arg.clappers.some((x) => {return x === this.props.user.id}) : null }
+                    stance={arg.stance}
+                    stats={this.props.debate._stats} />
           })}
         </div>
       )
@@ -70,12 +76,13 @@ class Chatroom extends Component {
       sideMenu = (
         <div className="col-3 side-chatmenu position-relative">
           <span className="glyphicon glyphicon-chevron-left position-absolute "></span>
+          <span>{'"Any fool can write code that a computer can understand. Good programmers write code that humans can understand" - Martin Fowler'}</span>
         </div>
       )
 
       chatroom = (
         <div className="col-9 chat-max mx-auto mt-10 shadow-md p-3 mb-1">
-          <ChatStatusBar timer={this.props.timer}/>
+          <ChatStatusBar debateTime={this.props.debate._debateTime} roundTime={this.props.debate._roundTime}/>
           {messages}
           <Chatbox debateId={this.props.debate._id}/>
         </div>
@@ -134,10 +141,7 @@ class Chatroom extends Component {
   initChatroom (debate) {
     console.log('initiating debate room (debateCreated)');
     this.props.onSetDebate(debate);
-    this.setState({
-      stance: debate.startStance,
-      debate: debate
-    });
+    setTimeout(() => { this.props.onSetIsLoading(false) }, 2000);
   }
 
   chatroomReadyHandler (data) {
@@ -151,6 +155,7 @@ class Chatroom extends Component {
     this.setState({timer: data});
   }
 
+  // TODO: GET RID OF THIS SHIT
   swapStance = () => {
     let updatedUser = {...this.props.user};
     updatedUser.id = 'nu-u1337';
@@ -158,6 +163,18 @@ class Chatroom extends Component {
     this.props.onSetUser(updatedUser);
   }
 
+  debateStarted = (debate) => {
+    console.log('debate has started!');
+    this.props.onSetDebate(debate)
+  }
+  endOfRound = (debate) => {
+    console.log('end of round');
+    this.props.onSetDebate(debate)
+  }
+  endOfDebate = (debate) => {
+    console.log('end of debate');
+    this.props.onSetDebate(debate);
+  }
 }
 
 // accessible by this.props.[property] in the render function

@@ -11,7 +11,8 @@ class ChatStatusBar extends Component {
 
     return (
       <div className="col-12 status-bar-cont">
-        <span className="badge ">{this.props.timer}</span>
+        <span className="badge ">{'Debate: ' + this.props.debateTime + ' s'}</span>
+        <span className="badge ">{'Round: ' + this.props.roundTime + ' s'}</span>
       </div>
     );
   }
