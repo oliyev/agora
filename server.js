@@ -29,7 +29,7 @@ app.post('/msg', function (req, res, next) {
   let userId = req.body.user.id;
 
   let arg = {
-    id: debateId + userId + Date.now(),
+    id: debateId + '-' + userId + Date.now(),
     stance: stance,
     content: msg,
     clappers: [],
@@ -122,8 +122,9 @@ gotDebateIdHandler = (socket, data) => {
   let debate = debates.find((x) => { return x.id === id; });
   if (debate) {
     console.log('debate found, id: ' + debate.id);
-    debate.setUserStance(data.user);
-    io.to(id).emit('chatroomReady', {debate: debate});
+    debate._topic = data.topic
+    let userStanceToSpectate = debate.setUserStance(data.user);
+    io.to(id).emit('chatroomReady', {debate: debate, userStanceToSpectate: userStanceToSpectate});
   }
   else
     createDebateRoom(id, data.user);

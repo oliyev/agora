@@ -31,8 +31,8 @@ class Message extends Component {
         <div className="input-group mb-4 mt-1 col-12">
           <div className="border msg-cont p-3 neut-state">
             <span className="align-middle col-12 d-block text-center">{'Welcome to the debate room! Both debaters will take turns to discuss on '}</span>
-            <span className="word-emphasis">{this.props.msg.topic}</span>
-            <span>{' starting with agruments '}<span className="word-emphasis">{this.props.msg.startStance ? 'for' : 'against'}</span>{' this topic.'}</span>
+            <span className="word-emphasis">{this.props.topic}</span>
+            <span>{' starting with agruments '}<span className="word-emphasis">{this.props.startStance ? 'for' : 'against'}</span>{' this topic.'}</span>
           </div>
         </div>
       )

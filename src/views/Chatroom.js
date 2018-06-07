@@ -34,8 +34,30 @@ class Chatroom extends Component {
 
   // lifecycle events
   componentWillMount () {
+    this.props.onSetInChatroom(true);
+
+    let userId = sessionStorage.getItem('username');
+    let debateId = sessionStorage.getItem('debateId');
+    let topic = sessionStorage.getItem('topic');
+    let stance = sessionStorage.getItem('stance');
+
+    switch (stance) {
+      case 'null': stance = null;
+        break;
+      case 'true':  stance = true;
+        break;
+      case 'false': stance = false;
+        break;
+      default:
+    }
+
+    let user = {id: userId, stance: stance};
+    this.props.onSetUser(user);
+
+    console.log(user, debateId, userId, stance);
+
     let ws = io.connect('http://127.0.0.1:4000/');
-    ws.on('connect', (data) => this.onConnect(data));
+    ws.on('connect', (data) => this.onConnect(debateId, user, topic));
     ws.on('message', (debate) => this.addMessage(debate));
     ws.on('debateCreated', (debate) => this.initChatroom(debate));
     ws.on('chatroomReady', (data) => this.chatroomReadyHandler(data));
@@ -44,12 +66,14 @@ class Chatroom extends Component {
     ws.on('endOfDebate', (data) => this.endOfDebate(data));
     ws.on('timerChange', (debate) => this.props.onSetDebate(debate));
     ws.on('clapped', (debate) => this.props.onSetDebate(debate));
-    ws.emit('gotDebateId', {debateId: this.props.debate._id, user: this.props.user});
     this.props.onSetWebSocket(ws);
 
-    this.state.introMsg['topic'] = this.state.topic || 'oops no topic';
-    // let oli = 'a really good link https://getbootstrap.com/docs/4.1/utilities/spacing/ which you can consult anytime'.match(utils.URLREGEX);
+    this.state.introMsg['topic'] = this.props.debate._topic || 'oops no topic';
+  }
 
+  componentWillUnmount() {
+    this.props.onSetInChatroom(false);
+    // remove spectators, debators, then null the debate if nothing.
   }
 
   render() {
@@ -62,7 +86,7 @@ class Chatroom extends Component {
     else {
       messages = (
         <div id="chatoutput" className="shadow-sm p-3 mb-3 rounded border chat-height">
-          <Message msg={this.state.introMsg} stance="neutral"/>
+          <Message msg={this.state.introMsg} stance="neutral" startStance={this.props.debate._startStance} topic={this.props.debate._topic}/>
           {this.props.debate._args.map((arg, index) => {
             return <Message key={arg.id} id={arg.id}
                     claps={arg.claps} msg={arg.content}
@@ -81,7 +105,7 @@ class Chatroom extends Component {
       )
 
       chatroom = (
-        <div className="col-9 chat-max mx-auto mt-10 shadow-md p-3 mb-1">
+        <div className="col-9 chat-max mx-auto shadow-md p-3 mb-1">
           <ChatStatusBar debateTime={this.props.debate._debateTime} roundTime={this.props.debate._roundTime}/>
           {messages}
           <Chatbox debateId={this.props.debate._id}/>
@@ -94,24 +118,16 @@ class Chatroom extends Component {
         {loading}
         {sideMenu}
         {chatroom}
-        <button onClick={ this.swapStance }>{'SWAP STANCE'}</button>
       </div>
     );
   }
 
   // methods
-  onConnect() {
+  onConnect(debateId, user, topic) {
     // this.state.ws.emit('initDebate', {debateId: 'r-409089'});
+    this.props.ws.emit('gotDebateId', {debateId: debateId, user: user, topic: topic});
     console.log('on connect');
   }
-
-  /*arg = {
-    id: debateId + req.body.user.id + Date.now(),
-    stance: req.body.user.stance,
-    content: msg,
-    clappers: [],
-    claps: 0
-  }*/
 
   addMessage (debate) {
     console.log('add message');
@@ -139,28 +155,40 @@ class Chatroom extends Component {
   }*/
 
   initChatroom (debate) {
-    console.log('initiating debate room (debateCreated)');
+    console.log('initiating debate room (debateCreated)', this.props.debate);
     this.props.onSetDebate(debate);
     setTimeout(() => { this.props.onSetIsLoading(false) }, 2000);
   }
 
   chatroomReadyHandler (data) {
-      console.log('chatroom ready (joined room)');
+      console.log('chatroom ready (joined room)', data);
       this.props.onSetIsLoading(false);
       this.props.onSetDebate(data.debate);
-      this.setState({ isLoading: false, debate: data.debate });
+
+      if (data.userStanceToSpectate)
+        this.props.onSetUser({...this.props.user, stance: null});
   }
 
   updateTimer (data) {
-    this.setState({timer: data});
   }
 
   // TODO: GET RID OF THIS SHIT
   swapStance = () => {
-    let updatedUser = {...this.props.user};
-    updatedUser.id = 'nu-u1337';
-    updatedUser.stance = !this.props.user.stance;
-    this.props.onSetUser(updatedUser);
+    let updatedStance, updatedId;
+
+    if (this.props.user.stance === true){
+      updatedStance = false;
+      updatedId = 'oli-against';
+    }
+    else if (this.props.user.stance === false){
+      updatedStance = null;
+      updatedId = 'oli-spectate';
+    }
+    else {
+      updatedStance = true;
+      updatedId = 'oli-for';
+    }
+    this.props.onSetUser({...this.props.user, stance: updatedStance, id: updatedId});
   }
 
   debateStarted = (debate) => {
@@ -184,8 +212,9 @@ const mapStateToProps = state => {
     ws: state.webSocket,
     isLoading: state.isLoading,
     user: state.user,
-    stance: (state.debate || {}).debatingStance,
-    timer: state.timer
+    stance: (state.debate || {})._currentDebatingStance,
+    timer: state.timer,
+    inChatroom: state.inChatroom
   };
 };
 
@@ -194,7 +223,8 @@ const mapDispatchToProps = dispatch => {
     onSetDebate: (debate) => dispatch({ type: 'SET_DEBATE', debate }),
     onSetIsLoading: (isLoading) => dispatch({ type: 'SET_IS_LOADING', isLoading }),
     onSetWebSocket: (webSocket) => dispatch({ type: 'SET_WEBSOCKET', webSocket }),
-    onSetUser: (user) => dispatch({ type: 'SET_USER', user })
+    onSetUser: (user) => dispatch({ type: 'SET_USER', user }),
+    onSetInChatroom: (inChatroom) => dispatch({ type: 'SET_IN_CHATROOM', inChatroom })
   };
 };
 

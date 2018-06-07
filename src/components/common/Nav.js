@@ -14,11 +14,22 @@ class Nav extends Component {
   }
 
   render(props) {
-    console.log(this.props)
+    let navStyle, linkStyle;
+    console.log(window.location.pathname);
+    if (window.location.pathname.includes('debate')){
+      navStyle = 'nav-chatroom navbar navbar-expand-lg navbar-light primary-grad';
+      linkStyle = ' js-scroll-trigger'
+    }
+    else {
+      navStyle = 'navbar navbar-expand-lg navbar-light fixed-top';
+      linkStyle = 'navbar-brand js-scroll-trigger';
+    }
 
-    return (<nav className="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+    return (<nav className={navStyle} id="mainNav">
       <div className="container">
-        <a className="navbar-brand js-scroll-trigger" href="#page-top"><img className="logo" src="images/agora.png" alt="Agora Logo"/></a>
+        <div className="agoralogo">
+          <a className={linkStyle} href="#page-top"><img className="logo" src="images/agora.png" alt="Agora Logo"/></a>
+        </div>
         <button className="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon"></span>
         </button>

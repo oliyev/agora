@@ -14,15 +14,19 @@ class Chatbox extends Component {
   }
 
   render() {
-
-    return (
-      <div className="input-group mb-1">
+    if (this.props.user.stance === null) {
+      return null;
+    }
+    else {
+      return (
+        <div className="input-group mb-1">
         <input onKeyPress={ (ev) => { if (ev.charCode == 13) this.send(this.props.debateId); } } id="msg2send" type="text" className="form-control shadow-sm" placeholder="Enter your argument" disabled={this.props.isDisabled}/>
         <div className="input-group-append">
-          <button onClick={ () => this.send(this.props.debateId) } className="btn btn-outline-secondary border shadow-sm btn-agora" type="button">Send</button>
+        <button onClick={ () => this.send(this.props.debateId) } className="btn btn-outline-secondary border shadow-sm btn-agora" type="button">Send</button>
         </div>
-      </div>
-    );
+        </div>
+      );
+    }
   }
 
   // methods
@@ -31,7 +35,7 @@ class Chatbox extends Component {
     let msg = input.value
     if (input.value){
       api.post('/msg', {msg: msg, debateId: debateId, user: this.props.user})
-      .then((response) => console.log('post msg response'))
+      .then((response) => console.log('post msg response ' + debateId))
       .catch((err) => console.log(err))
     }
     input.value = '';
@@ -39,10 +43,9 @@ class Chatbox extends Component {
 }
 
 const mapStateToProps = state => {
-  console.log(state.user);
   return {
     webSocket: state.webSocket,
-    debateId: state.debateId,
+    debateId: state.debate._id,
     isDisabled: !(state.debate._currentDebatingStance === state.user.stance),
     user: state.user
   };

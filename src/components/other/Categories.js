@@ -15,7 +15,6 @@ class Categories extends Component {
   componentDidMount(){
     axios.get('https://agora-spring.herokuapp.com/getDebates')
       .then(response => {
-        console.log(response);
         this.setState({dataset : response.data})
         console.log(this.state.dataset)
       })

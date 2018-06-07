@@ -38,9 +38,10 @@ class ListItem extends Component {
 
   }
 
-  onClickDebateHandler = (stance) => {
+  onClickDebateHandler = (stance, topic) => {
     sessionStorage.setItem("debateId", this.props.id)
     sessionStorage.setItem("stance", stance)
+    sessionStorage.setItem("topic", topic)
     console.log(sessionStorage.getItem("debateId"));
     console.log(sessionStorage.getItem("stance"));
     this.props.history.push("/debate")
@@ -61,9 +62,9 @@ class ListItem extends Component {
                         <hr />
                         <div className="row rating-desc">
                             <div className="col-md-12">
-                                <button className="btn btn-info sr-button ctButton" onClick={ () => this.onClickDebateHandler(true) } > Debate for this postion! </button>
-                                <button className="btn btn-info sr-button ctButton" onClick={ () => this.onClickDebateHandler(false) } > Debate against this postion</button>
-                                <button className="btn btn-info sr-button ctButton" onClick={ () => this.onClickDebateHandler(null) } > Be a spectator </button>
+                                <button className="btn btn-info sr-button ctButton" onClick={ () => this.onClickDebateHandler(true, this.props.topic) } > Debate for this postion! </button>
+                                <button className="btn btn-info sr-button ctButton" onClick={ () => this.onClickDebateHandler(false, this.props.topic) } > Debate against this postion</button>
+                                <button className="btn btn-info sr-button ctButton" onClick={ () => this.onClickDebateHandler(null, this.props.topic) } > Be a spectator </button>
                             </div>
                         </div>
                     </div>

@@ -14,6 +14,7 @@ module.exports = class Debate {
     this.debateTime = 65// (60 * 10);
     this.hasStarted = false;
     this.hasEnded = false;
+    this.topic = '',
     this.stats = {
       totalClapsFor: 0,
       mostClapsFor: 0,
@@ -46,6 +47,9 @@ module.exports = class Debate {
   get timer() { return this._timer; }
   set timer(timer) { this._timer = timer; }
 
+  get topic() { return this._topic; }
+  set topic(topic) { this._topic = topic; }
+
   get args() { return this._args; }
   set args(args) { this._args = args; }
 
@@ -76,14 +80,16 @@ module.exports = class Debate {
   setUserStance(user) {
     if (this._debaterFor && this._debaterAgainst){
       this._spectators.push(user);
+      return true;
     }
     else{
       if (user.stance !== null){
         if (user.stance)
-        this._debaterFor = user
+          this._debaterFor = user
         else
-        this._debaterAgainst = user
+          this._debaterAgainst = user
       }
+      return false;
     }
   }
 

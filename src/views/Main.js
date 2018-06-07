@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import { connect } from 'react-redux';
 
 import Banner from '../components/homepage/Banner';
 import Nav from '../components/common/Nav'
@@ -22,7 +23,7 @@ import '../../node_modules/jquery/dist/jquery.js';
 import '../../node_modules/jquery.easing/jquery.easing.js'
 //import '../js/creative.js'
 
-import { Route , withRouter } from 'react-router-dom'
+import { Route , withRouter, Redirect } from 'react-router-dom'
 
 import axios from 'axios';
 
@@ -524,6 +525,7 @@ class Main extends Component {
             navHash2={this.state.navHash2}
             navHash3={this.state.navHash3}
             navHash4={this.state.navHash4}
+            inChatroom={this.props.inChatroom}
           />
         {login}
         {register}
@@ -532,10 +534,28 @@ class Main extends Component {
           <div>
             <Homepage />
           </div> }/>
-        <Route path="/debate" render={() => <Chatroom /> }/>
+        <Route path="/debate" render={() => sessionStorage.getItem('username') ? <Chatroom /> : <Redirect to="/" /> }/>
         <Route path="/categories" render={() => <Categories /> }/>
       </div>
   );}
 }
+
+// accessible by this.props.[property] in the render function
+const mapStateToProps = state => {
+  return {
+    ws: state.webSocket,
+    isLoading: state.isLoading,
+    user: state.user,
+    inChatroom: state.inChatroom
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onSetIsLoading: (isLoading) => dispatch({ type: 'SET_IS_LOADING', isLoading }),
+    onSetWebSocket: (webSocket) => dispatch({ type: 'SET_WEBSOCKET', webSocket }),
+    onSetUser: (user) => dispatch({ type: 'SET_USER', user })
+  };
+};
 
 export default withRouter(Main);
