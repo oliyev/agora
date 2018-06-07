@@ -9,7 +9,7 @@ const cluster = require('cluster');
 const child_process = require('child_process')
 const Debate = require('./Debate');
 
-const PORT = process.env.PORT; // || 4000;
+const PORT = process.env.PORT || 3000;
 
 let q = 'r-409089';
 let debates = [];
