@@ -1,0 +1,9 @@
+.smallImgStyle{
+  height:150px;
+  object-fit: cover;
+}
+
+.ctButton{
+  margin: 5px 10px 16px;
+  white-space: normal;
+}
