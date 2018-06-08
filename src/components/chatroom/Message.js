@@ -80,6 +80,7 @@ class Message extends Component {
             <span className="align-middle col-12 d-block text-left">{this.props.msg}</span>
             <div onClick={ () => { this.toggleClap(this.props.id) } } className={clapClassName}>
               <img className="clap-icon" src={clapIcon} />
+              { this.props.claps !== 0 ? <span className="badge claps-badge-a">{this.props.claps}</span> : '' }
             </div>
           </div>
         </div>
@@ -92,7 +93,7 @@ class Message extends Component {
             <span className="align-middle col-12 d-block text-left">{this.props.msg}</span>
             <div onClick={ () => { this.toggleClap(this.props.id) } } className={clapClassName}>
               <img className="clap-icon" src={clapIcon} />
-              { this.props.claps !== 0 ? <span className="badge badge-light">{this.props.claps}</span> : '' }
+              { this.props.claps !== 0 ? <span className="badge claps-badge-a">{this.props.claps}</span> : '' }
             </div>
           </div>
           <img className="m-1 msgimg" src={userIcon} alt="userIcon" />

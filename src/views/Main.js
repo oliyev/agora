@@ -460,7 +460,7 @@ class Main extends Component {
     //check if we need to display the progress bar
     if (this.state.progressBar && !this.state.loginIncorrect){
       //console.log("PROGRESS BAR SHOULD SHOW NOW")
-      progress = <Spinner name="pacman" className="pacman2" color="#ee4b28"/>
+      progress = <Spinner name="pacman" className="pacman2" color="#212529"/>
     }
 
     //if user clicks on login, display the login screen

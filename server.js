@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const io = require('socket.io')(server);
 const Debate = require('./Debate');
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 
 let q = 'r-409089';
 let debates = [];

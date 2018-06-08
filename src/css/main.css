@@ -138,6 +138,13 @@ body{
   display:flex;
 }
 
+.claps-badge-a {
+	position: absolute;
+	bottom: 0;
+	right: -10px;
+	background-color: var(--sec); 
+}
+
 .pacman2{
   position:fixed !important;
   margin:19% 49%;
@@ -145,7 +152,7 @@ body{
 }
 .loading-text{
 	font-weight: bold;
-	color: #ff775d;
+	color: #212529;
   position:fixed !important;
 	width: 350px;
   margin:25% calc(49% - (350px/2));

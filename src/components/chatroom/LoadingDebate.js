@@ -10,7 +10,7 @@ class LoadingDebate extends Component {
   render(props){
     return (
       <div className="container-modal">
-          <Spinner name="pacman" className="pacman2" color="#ff775d"/>
+          <Spinner name="pacman" className="pacman2" color="#212529"/>
           <h4 className="loading-text">{'Loading debate room'}</h4>
       </div>
     );
