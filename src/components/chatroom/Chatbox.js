@@ -14,7 +14,7 @@ class Chatbox extends Component {
   }
 
   render() {
-    if ( this.props.debate._spectators.some( (x) => { return x.id === this.props.user.id }) {
+    if ( this.props.debate._spectators.some( (x) => { return x.id === this.props.user.id })) {
       return null;
     }
     else {
