@@ -1,15 +1,10 @@
-let url = process.env.CLOUDAMQP_URL || "amqp://zklckogy:uq1LZVrxru56y_o_fg9Xf0VB08cXzeZT@emu.rmq.cloudamqp.com/zklckogy";
-
 const app = require('express')();
 const server = require('http').Server(app);
 const bodyParser = require('body-parser');
-const amqplib = require('amqplib').connect(url);
 const io = require('socket.io')(server);
-const cluster = require('cluster');
-const child_process = require('child_process')
 const Debate = require('./Debate');
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 
 let q = 'r-409089';
 let debates = [];
