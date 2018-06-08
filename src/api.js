@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const HTTP = axios.create({
-  baseURL: process.env.baseURL,
+  // baseURL: 'http://localhost:4000/',
+  baseURL: 'https://agoraproject.herokuapp.com/',
   headers: {}
 });
 
