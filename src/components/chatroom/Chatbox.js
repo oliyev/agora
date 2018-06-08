@@ -14,7 +14,7 @@ class Chatbox extends Component {
   }
 
   render() {
-    if (this.props.user.stance === null) {
+    if ( this.props.debate._spectators.some( (x) => { return x.id === this.props.user.id }) {
       return null;
     }
     else {
@@ -47,6 +47,7 @@ const mapStateToProps = state => {
     webSocket: state.webSocket,
     debateId: state.debate._id,
     isDisabled: !(state.debate._currentDebatingStance === state.user.stance),
+    debate: state.debate,
     user: state.user
   };
 }
