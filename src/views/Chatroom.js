@@ -101,7 +101,11 @@ class Chatroom extends Component {
       sideMenu = (
         <div className="col-3 side-chatmenu position-relative">
           <span className="glyphicon glyphicon-chevron-left position-absolute "></span>
-          <span>{'"Any fool can write code that a computer can understand. Good programmers write code that humans can understand" - Martin Fowler'}</span>
+          <span className="sideBarText">{'"Any fool can write code that a computer can understand. Good programmers write code that humans can understand" - Martin Fowler'}</span>
+          <span className="sideBarText">{'"The best thing about a boolean is even if you are wrong, you are only off by a bit." - (Anonymous)'}</span>
+          <span className="sideBarText">{'"It’s not a bug – it’s an undocumented feature." - (Anonymous)'}</span>
+          <span className="sideBarText">{'"Always code as if the guy who ends up maintaining your code will be a violent psychopath who knows where you live." - (Anonymous)'}</span>
+          <span className="sideBarText">{'"If debugging is the process of removing software bugs, then programming must be the process of putting them in." - Edsger Dijkstra'}</span>
         </div>
       )
 

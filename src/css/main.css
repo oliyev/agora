@@ -81,6 +81,11 @@ body{
 	transition: width 0.25s ease;
 }
 
+.sideBarText{
+	display:inline-block;
+	margin: 20px 10px;
+}
+
 .navigation {
 	background-image: linear-gradient(90deg,#37cc9a 10%,#45babf 90%);
 }
