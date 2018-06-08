@@ -66,6 +66,10 @@ body{
 	width:80%;
 }
 
+.timer {
+  padding: 14px !important;
+}
+
 /***** CHAT STYLE *****/
 .side-chatmenu {
 	background-color: var(--sec);
