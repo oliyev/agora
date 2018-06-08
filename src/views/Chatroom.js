@@ -67,6 +67,7 @@ class Chatroom extends Component {
     ws.on('endOfDebate', (data) => this.endOfDebate(data));
     ws.on('timerChange', (debate) => this.props.onSetDebate(debate));
     ws.on('clapped', (debate) => this.props.onSetDebate(debate));
+    ws.on('gtfo', (data) => this.gtfo(data))
     this.props.onSetWebSocket(ws);
 
     this.state.introMsg['topic'] = this.props.debate._topic || 'oops no topic';
@@ -173,6 +174,10 @@ class Chatroom extends Component {
 
       if (data.userStanceToSpectate && this.props.user.id === data.id)
         this.props.onSetUser({...this.props.user, stance: null});
+  }
+
+  gtfo = (data) => {
+    this.props.onSetDebate(data);
   }
 
   updateTimer (data) {
