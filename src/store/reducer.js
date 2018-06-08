@@ -1,6 +1,6 @@
 const initialState = {
   user: { id: 'u-sadlfk', stance: false },
-  debate: { _id: 'r-409089', _currentDebatingStance: false, _args: [] },
+  debate: { _id: 'r-409089', _currentDebatingStance: false, _args: [], _spectators: [] },
   debateId: '',
   webSocket: {},
   isLoading: true,
