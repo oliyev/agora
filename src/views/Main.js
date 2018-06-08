@@ -93,7 +93,11 @@ class Main extends Component {
     })(jQuery); // End of use strict
 
     //determine if user has already logged in and what kind of menu to display
-    if (sessionStorage.getItem("user") != "null"){
+    console.log(sessionStorage.getItem("user"))
+
+    if (sessionStorage.getItem("user") == null || sessionStorage.getItem("user") == "null"){
+      this.handleMenuChange(false);
+    }else{
       console.log("User stored in session");
       this.handleMenuChange(true);
       let temp = {...this.state.user};
