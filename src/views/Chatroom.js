@@ -74,6 +74,7 @@ class Chatroom extends Component {
 
   componentWillUnmount() {
     this.props.onSetInChatroom(false);
+    this.props.webSocket.emit('removeUser', {debateId: this.props.debate._id, user: this.props.user}); //TODO: jklasdjklasjklajkldfjklasdfjklasdfjkadfadfjklkladjsf
     // remove spectators, debators, then null the debate if nothing.
   }
 
@@ -170,7 +171,7 @@ class Chatroom extends Component {
       this.props.onSetIsLoading(false);
       this.props.onSetDebate(data.debate);
 
-      if (data.userStanceToSpectate)
+      if (data.userStanceToSpectate && this.props.user.id === data.id)
         this.props.onSetUser({...this.props.user, stance: null});
   }
 
